@@ -26,51 +26,51 @@ const imagen = `/img/emociones/${props.ficha.nombre}.jpg`;
 
             <div class="tarta-text">Devotion</div>
           </div>
-          <div class="tarta-caja longing">
+          <div class="tarta-caja caja-negra longing">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["longing"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Longing</div>
           </div>
-          <div class="tarta-caja enthusiasm">
+          <div class="tarta-caja caja-negra enthusiasm">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["enthusiasm"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Enthusiasm</div>
           </div>
-          <div class="tarta-caja surprise">
+          <div class="tarta-caja caja-verde surprise">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["surprise"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Surprise</div>
           </div>
-          <div class="tarta-caja tenderness">
+          <div class="tarta-caja caja-negra tenderness">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["tenderness"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Tenderness</div>
           </div>
-          <div class="tarta-caja fervor">
+          <div class="tarta-caja caja-negra fervor">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["fervency"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Fervency</div>
           </div>
-          <div class="tarta-caja admiration">
+          <div class="tarta-caja caja-verde admiration">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["admiration"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Admiration</div>
           </div>
-          <div class="tarta-caja optimism">
+          <div class="tarta-caja caja-negra optimism">
             <div class="tarta-caja-superior">
-              <div class="tarta-number"></div>
+              <div class="tarta-number">{{ ficha["optimism"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Optimism</div>
@@ -85,14 +85,15 @@ const imagen = `/img/emociones/${props.ficha.nombre}.jpg`;
 </template>
 
 <style lang="scss">
+$verde: #00ce7e;
+
 footer {
-  background-color: #00ce7e;
+  background-color: $verde;
   padding: 3em 1em 1em;
   margin-top: auto;
 }
 
 .wrapper {
-  height: 100vh;
   padding: 4em;
   background: #606060;
 }
@@ -105,7 +106,7 @@ footer {
 }
 
 .reaction-banner {
-  background-color: #00ce7e;
+  background-color: $verde;
   color: black;
   display: flex;
   justify-content: space-between;
@@ -149,12 +150,23 @@ footer {
     height: 300px;
     width: 300px;
     border-radius: 0.3em;
+    border: 0.2em solid;
+  }
+
+  .caja-negra {
+    background-color: #000000;
+    border-color: $verde;
+    color: white;
+  }
+
+  .caja-verde {
+    background-color: $verde;
   }
 
   .tarta-caja-superior {
     padding: 0 2em;
     display: flex;
-    justify-content: end;
+    justify-content: center;
   }
 
   .tarta-number {
@@ -183,6 +195,41 @@ footer {
   .devotion {
     top: -7em;
     left: 30em;
+  }
+
+  .optimism {
+    top: -4em;
+    left: 15em;
+  }
+
+  .admiration {
+    top: 8em;
+    left: 2em;
+  }
+
+  .fervor {
+    top: 22em;
+    left: 5em;
+  }
+
+  .tenderness {
+    top: 22em;
+    left: 24em;
+  }
+
+  .surprise {
+    top: 20em;
+    left: 40em;
+  }
+
+  .enthusiasm {
+    top: 8em;
+    left: 52em;
+  }
+
+  .longing {
+    top: -5em;
+    left: 45em;
   }
 }
 </style>
