@@ -84,7 +84,7 @@ const imagen = `/img/emociones/${props.ficha.nombre}.jpg`;
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $verde: #00ce7e;
 
 footer {
