@@ -20,6 +20,12 @@
 }
 
 @font-face {
+  font-family: "Barlow-ExtraLightItalic";
+  src: local("Barlow-ExtraLightItalic"),
+  url(~/assets/fonts/Barlow-ExtraLightItalic.ttf) format("truetype");
+}
+
+@font-face {
   font-family: "Barlow-SemiBold";
   src: local("Barlow-SemiBold"),
   url(~/assets/fonts/Barlow-SemiBold.ttf) format("truetype");
