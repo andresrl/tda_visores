@@ -84,7 +84,11 @@ const imagen = `/img/emociones/${props.ficha.nombre}.jpg`;
   </div>
 </template>
 
+<<<<<<< HEAD
 <style lang="scss" scoped>
+=======
+<style scoped lang="scss">
+>>>>>>> 6130112 (StepHandler para Tablets)
 $verde: #00ce7e;
 
 footer {

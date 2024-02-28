@@ -4,7 +4,7 @@ import { ref, onBeforeMount, onMounted } from "vue";
 
 <template>
   <NotFound v-if="connectionLost" />
-  <TabletStep1 v-else />
+  <Tablet id="0" />
 </template>
 
 <style lang="scss" scoped>
@@ -22,5 +22,4 @@ $naranja: #E2973B;
   }
 }
 
-//1.54
 </style>
