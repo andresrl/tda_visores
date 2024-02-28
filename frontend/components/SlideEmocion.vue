@@ -89,13 +89,16 @@ const isAnimated = computed(() => {
             </div>
             <div class="tarta-text">Tenderness</div>
           </div>
-          <!--          <div class="tarta-caja caja-negra fervor">-->
-          <!--            <div class="tarta-caja-superior">-->
-          <!--              <div class="tarta-number">{{ ficha["fervency"] }}</div>-->
-          <!--              <div class="tarta-percent">%</div>-->
-          <!--            </div>-->
-          <!--            <div class="tarta-text">Fervency</div>-->
-          <!--          </div>-->
+          <div
+            class="tarta-caja caja-negra fervor"
+            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
+          >
+            <div class="tarta-caja-superior">
+              <div class="tarta-number">{{ ficha["fervency"] }}</div>
+              <div class="tarta-percent">%</div>
+            </div>
+            <div class="tarta-text">Fervency</div>
+          </div>
           <div
             class="tarta-caja caja-verde admiration"
             :class="{ 'animate__animated animate__slideInUp': isAnimated }"
@@ -251,8 +254,9 @@ footer {
   }
 
   .fervor {
-    top: 22em;
-    left: 5em;
+    top: 32em;
+    left: 26em;
+    zoom: 0.6;
   }
 
   .tenderness {
