@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
-import SlideEmocion from "~/components/SlideEmocion.vue";
+
+const DELAY_SLIDER = 6 * 1000;
+const REFRESH_DATA_INTERVAL = 10 * 1000;
 
 const modules = [EffectFade, Autoplay, Pagination, Navigation];
 const swiperInstance = ref(null);
@@ -17,8 +19,9 @@ const loading = ref(true);
 const miSwiper = ref(null);
 const connectionLost = ref(false);
 const fichas = ref([]);
+const tiempoReal = ref([]);
 
-const fetchData = async () => {
+const fetchDataEmociones = async () => {
   const result = await $fetch(
     runtimeConfig.public.NODE_SERVER_URL + "/api/get-goli-data",
   );
@@ -58,8 +61,27 @@ const fetchData = async () => {
       fichas.value.push(updatedFicha);
     }
   });
+};
 
-  loading.value = false;
+const fetchDataTiempoReal = async () => {
+  const goli2 = (
+    await $fetch(runtimeConfig.public.NODE_SERVER_URL + "/api/get-goli-2-data")
+  )[0];
+
+  const api2 = {
+    companies: 2371,
+    professionals: 346,
+    meetings: 122,
+  };
+
+  // const goli2 = await $fetch(
+  //   runtimeConfig.public.NODE_SERVER_URL + "/api/TODO",
+  // );
+
+  tiempoReal.value = {
+    ...goli2,
+    ...api2,
+  };
 };
 
 const onSwiper = (swiper) => {
@@ -71,10 +93,16 @@ const onSwiper = (swiper) => {
 
 onBeforeMount(() => {
   intervalData = setInterval(async () => {
-    fetchData();
-  }, 5000);
+    fetchDataEmociones();
+    fetchDataTiempoReal();
+  }, REFRESH_DATA_INTERVAL);
 
-  fetchData();
+  fetchDataEmociones();
+  fetchDataTiempoReal();
+
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
 });
 
 onMounted(() => {
@@ -107,7 +135,7 @@ onBeforeUnmount(() => {
     ref="miSwiper"
     @swiper="onSwiper"
     :modules="modules"
-    :autoplay="{ delay: 6000, disableOnInteraction: false }"
+    :autoplay="{ delay: DELAY_SLIDER, disableOnInteraction: false }"
     :loop="true"
   >
     <SwiperSlide v-for="(ficha, index) in fichas" :key="ficha">
@@ -115,6 +143,14 @@ onBeforeUnmount(() => {
         :ficha="ficha"
         :current-slide-index="currentSlideIndex"
         :index="index"
+      />
+    </SwiperSlide>
+
+    <SwiperSlide>
+      <SlideTiempoReal
+        :current-slide-index="currentSlideIndex"
+        :index="fichas.length"
+        :tiempo-real="tiempoReal"
       />
     </SwiperSlide>
   </Swiper>

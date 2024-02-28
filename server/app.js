@@ -1,77 +1,91 @@
-const express = require('express');
-const multer = require('multer');
+const express = require("express");
+const multer = require("multer");
 // const sharp = require('sharp');
-const XLSX = require('xlsx');
+const XLSX = require("xlsx");
 // const FTP = require('ftp');
-const { Client } = require('ssh2');
-const fs = require('fs');
-const path = require('path');
-const cors = require('cors'); // CORS
+const { Client } = require("ssh2");
+const fs = require("fs");
+const path = require("path");
+const cors = require("cors"); // CORS
 
 const app = express();
 
 app.use(cors()); // Habilitar CORS para todas las rutas
-app.use('/fotos', express.static(path.join(__dirname, 'fotos')));
-app.use('/videos', express.static(path.join(__dirname, 'videos')));
+app.use("/fotos", express.static(path.join(__dirname, "fotos")));
+app.use("/videos", express.static(path.join(__dirname, "videos")));
 
-app.get('/api/ping', (req, res) => {
+app.get("/api/ping", (req, res) => {
   const data = true;
   res.json(data);
 });
 
-app.get('/api/get-goli-data', (req, res) => {
-  const localPath = 'goli.xlsx';
+app.get("/api/get-goli-data", (req, res) => {
+  const localPath = "goli.xlsx";
   try {
     const workbook = XLSX.readFile(localPath);
     const sheetName = workbook.SheetNames[0];
     const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
     res.json(data);
   } catch (e) {
-    console.error('Excel Processing Error:', e);
-    res.status(500).send('Error al procesar el archivo Excel');
+    console.error("Excel Processing Error:", e);
+    res.status(500).send("Error al procesar el archivo Excel");
   }
 });
 
-app.get('/api/fotos', (req, res) => {
-  const fotosDir = path.join(__dirname, '/fotos');
+app.get("/api/get-goli-2-data", (req, res) => {
+  const localPath = "goli-2.xlsx";
+  try {
+    const workbook = XLSX.readFile(localPath);
+    const sheetName = workbook.SheetNames[0];
+    const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    res.json(data);
+  } catch (e) {
+    console.error("Excel Processing Error:", e);
+    res.status(500).send("Error al procesar el archivo Excel");
+  }
+});
+
+app.get("/api/fotos", (req, res) => {
+  const fotosDir = path.join(__dirname, "/fotos");
   fs.readdir(fotosDir, (err, files) => {
     if (err) {
-      res.status(500).send('Error al leer la carpeta de fotos');
+      res.status(500).send("Error al leer la carpeta de fotos");
       return;
     }
-    const jpgFiles = files.filter(file => file.endsWith('.jpg'));
+    const jpgFiles = files.filter((file) => file.endsWith(".jpg"));
     res.json(shuffleArray(jpgFiles)); // Envía los archivos mezclados
   });
 });
 
-app.get('/api/videos', (req, res) => {
-  const fotosDir = path.join(__dirname, '/videos');
+app.get("/api/videos", (req, res) => {
+  const fotosDir = path.join(__dirname, "/videos");
   fs.readdir(fotosDir, (err, files) => {
     if (err) {
-      res.status(500).send('Error al leer la carpeta de videos');
+      res.status(500).send("Error al leer la carpeta de videos");
       return;
     }
-    const mp4Files = files.filter(file => file.endsWith('.mp4'));
+    const mp4Files = files.filter((file) => file.endsWith(".mp4"));
     res.json(shuffleArray(mp4Files)); // Envía los archivos mezclados
   });
 });
 
-
-
 // Configurar almacenamiento de Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (file.mimetype.startsWith('image')) {
-      cb(null, 'fotos/');
-    } else if (file.mimetype.startsWith('video')) {
-      cb(null, 'videos/');
+    if (file.mimetype.startsWith("image")) {
+      cb(null, "fotos/");
+    } else if (file.mimetype.startsWith("video")) {
+      cb(null, "videos/");
     } else {
-      cb({ error: 'Tipo de archivo no soportado' }, false);
+      cb({ error: "Tipo de archivo no soportado" }, false);
     }
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname),
+    );
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -118,7 +132,6 @@ const upload = multer({ storage: storage });
 //   });
 // });
 
-
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -126,8 +139,6 @@ function shuffleArray(array) {
   }
   return array;
 }
-
-
 
 const PORT = 4003;
 app.listen(PORT, () => {
