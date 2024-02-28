@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onBeforeMount, onMounted } from "vue";
+  import { ref } from "vue";
 
   const step = ref(1);
 
@@ -16,13 +16,7 @@
 </script>
 
 <template>
-  <div class="tabletWrapper">
-    <div class="content">
-      <h1>Tablet</h1>
-      <p>EMPRESA: {{ props.id }}</p>
-      <StepHandler :step="step" @changeStep="handleChangeStep" />
-    </div>
-  </div>
+  <Tablet_StepHandler :step="step" :id="props.id" @changeStep="handleChangeStep" />
 </template>
 
 <style lang="scss" scoped>
@@ -34,10 +28,14 @@ $naranja: #E2973B;
   width: 800px;
   height: 1280px;
   background-color: #f1f1f1;
-  @media (min-width: 800px) {
+  @media (min-width: 801px) {
     width: 1280px;
     height: 800px;
   }
+}
+
+h1 {
+  margin: 0;
 }
 
 </style>

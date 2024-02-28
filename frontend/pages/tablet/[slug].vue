@@ -17,7 +17,7 @@ watch(() => route.params, (newParams) => {
 
 <template>
   <NotFound v-if="connectionLost" />
-  <Tablet :id="slug" />
+  <Tablet_Main :id="slug" />
 </template>
 
 <style lang="scss" scoped>
