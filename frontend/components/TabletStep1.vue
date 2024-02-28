@@ -3,8 +3,11 @@ import { ref, onBeforeMount, onMounted } from "vue";
 </script>
 
 <template>
-  <NotFound v-if="connectionLost" />
-  <TabletStep1 v-else />
+  <div class="wrapper">
+    <div class="content">
+    
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
