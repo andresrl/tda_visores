@@ -6,11 +6,14 @@ import "swiper/css";
 import SlideEmocion from "~/components/SlideEmocion.vue";
 
 const modules = [EffectFade, Autoplay, Pagination, Navigation];
+const swiperInstance = ref(null);
+const currentSlideIndex = ref(0);
 
 const runtimeConfig = useRuntimeConfig();
 
 let checkConnectionId;
 let intervalData;
+const loading = ref(true);
 const miSwiper = ref(null);
 const connectionLost = ref(false);
 const fichas = ref([]);
@@ -20,11 +23,11 @@ const fetchData = async () => {
     runtimeConfig.public.NODE_SERVER_URL + "/api/get-goli-data",
   );
 
-  fichas.value = result
+  const updatedFichas = result
     .filter((ficha) => ficha.Anhelo)
-    .map((ficha) => {
+    .map((ficha, index) => {
       return {
-        nombre: ficha.__EMPTY,
+        nombre: ficha.__EMPTY.toLowerCase().trim(),
         admiration: ficha["Admiración "],
         longing: ficha["Anhelo"],
         devotion: ficha["Devoción"],
@@ -36,6 +39,34 @@ const fetchData = async () => {
         reacciones: ficha["TOTAL REACCIONES"],
       };
     });
+
+  updatedFichas.forEach((updatedFicha) => {
+    const index = fichas.value.findIndex(
+      (f) => f.nombre === updatedFicha.nombre,
+    );
+    if (index !== -1) {
+      fichas.value[index].optimism = updatedFicha.optimism;
+      fichas.value[index].reacciones = updatedFicha.reacciones;
+      fichas.value[index].tenderness = updatedFicha.tenderness;
+      fichas.value[index].admiration = updatedFicha.admiration;
+      fichas.value[index].devotion = updatedFicha.devotion;
+      fichas.value[index].enthusiasm = updatedFicha.enthusiasm;
+      fichas.value[index].fervency = updatedFicha.fervency;
+      fichas.value[index].longing = updatedFicha.longing;
+      fichas.value[index].surprise = updatedFicha.surprise;
+    } else {
+      fichas.value.push(updatedFicha);
+    }
+  });
+
+  loading.value = false;
+};
+
+const onSwiper = (swiper) => {
+  swiperInstance.value = swiper;
+  swiperInstance.value.on("slideChange", () => {
+    currentSlideIndex.value = swiperInstance.value.realIndex;
+  });
 };
 
 onBeforeMount(() => {
@@ -59,7 +90,7 @@ onMounted(() => {
         connectionLost.value = true;
       }
     }
-  }, 5000);
+  }, 1000);
 });
 
 onBeforeUnmount(() => {
@@ -72,26 +103,19 @@ onBeforeUnmount(() => {
   <NotFound v-if="connectionLost" />
 
   <Swiper
-    v-else
+    v-else-if="!loading"
     ref="miSwiper"
     @swiper="onSwiper"
-    @slideChange="onSlideChange"
     :modules="modules"
-    :autoplay="{ delay: 5000, disableOnInteraction: false }"
+    :autoplay="{ delay: 6000, disableOnInteraction: false }"
     :loop="true"
   >
-    <SwiperSlide v-for="ficha in fichas" :key="ficha">
-      <SlideEmocion :ficha="ficha" />
+    <SwiperSlide v-for="(ficha, index) in fichas" :key="ficha">
+      <SlideEmocion
+        :ficha="ficha"
+        :current-slide-index="currentSlideIndex"
+        :index="index"
+      />
     </SwiperSlide>
   </Swiper>
 </template>
-
-<style lang="scss" scoped>
-.mainWrapper {
-  width: 2160px;
-  height: 3840px;
-  background-color: #f1f1f1;
-}
-
-//1.54
-</style>
