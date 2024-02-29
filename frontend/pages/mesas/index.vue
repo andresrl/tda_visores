@@ -164,7 +164,6 @@ onBeforeUnmount(() => {
 $verde: #00ce7e;
 
 #logo {
-  width: 300px;
 }
 
 .container {
@@ -180,6 +179,7 @@ h1 {
   font-size: 4em;
   font-family: Barlow-SemiBoldItalic;
   line-height: 1;
+  margin-top: 2em;
 }
 
 .gap {
