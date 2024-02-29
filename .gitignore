@@ -44,3 +44,6 @@ npm-debug.log
 yarn-error.log
 .vscode
 
+!frontend/public/img/photos/*
+frontend/public/img/photos/*
+
