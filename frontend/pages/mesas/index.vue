@@ -1,7 +1,13 @@
 <script setup>
+import { onBeforeUnmount } from "vue";
+
+const FETCH_INTERVAL = 30_000;
+
 const BEARER_TOKEN =
   "Bearer 5|ne4srosIMQWM3lTyAZfIH28RONnIvinPDOhu7qdWb65ac5d3";
 const API_ENDPOINT = "https://andalusiancrushlink.com/api";
+
+let interval = null;
 
 const organizers = ref([]);
 const spaces = ref([]);
@@ -56,6 +62,14 @@ const getCurrentCompanyNameOfSpace = (table_name) => {
 
 onMounted(() => {
   fetchOrganizers().then(fetchMeetingSpaces).then(fetchMeetingSlots);
+
+  interval = setInterval(() => {
+    fetchOrganizers().then(fetchMeetingSpaces).then(fetchMeetingSlots);
+  }, FETCH_INTERVAL);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(interval);
 });
 </script>
 <template>
