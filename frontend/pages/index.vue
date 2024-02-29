@@ -8,7 +8,7 @@ const DELAY_SLIDER_EMOCIONES = 10 * 1000;
 const DELAY_SLIDER_TIEMPO_REAL = 20 * 1000;
 const DELAY_SLIDER_POSTS = 30 * 1000;
 
-const REFRESH_DATA_INTERVAL = 10 * 1000;
+const REFRESH_DATA_INTERVAL = 30 * 1000;
 
 const modules = [EffectFade, Autoplay, Pagination, Navigation];
 const swiperInstance = ref(null);
@@ -47,11 +47,14 @@ const fetchDataEmociones = async () => {
       };
     });
 
-  updatedFichas.forEach((updatedFicha) => {
-    const index = fichas.value.findIndex(
-      (f) => f.nombre === updatedFicha.nombre,
-    );
-    if (index !== -1) {
+  // Si se añaden o elimian, sobrescribimos array entero
+
+  if (updatedFichas.length !== fichas.value.length) {
+    return (fichas.value = updatedFichas);
+  }
+
+  updatedFichas.forEach((updatedFicha, index) => {
+    if (index < fichas.value.length) {
       fichas.value[index].optimism = updatedFicha.optimism;
       fichas.value[index].reacciones = updatedFicha.reacciones;
       fichas.value[index].tenderness = updatedFicha.tenderness;
@@ -72,6 +75,7 @@ const fetchDataTiempoReal = async () => {
     await $fetch(runtimeConfig.public.NODE_SERVER_URL + "/api/get-goli-2-data")
   )[0];
 
+  // TODO
   const api2 = {
     companies: 2371,
     professionals: 346,
@@ -94,7 +98,8 @@ const fetchDataPosts = async () => {
   // );
   // posts.value = result;
 
-  posts.value = [
+  // TODO
+  const updatedPosts = [
     {
       photo: "/img/photos/aaaa.jpg",
       title: "Título Título 1",
@@ -121,6 +126,21 @@ const fetchDataPosts = async () => {
       text: "Existen muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría han sufrido alteraciones de alguna forma, ya sea por inserción de humor o palabras aleatorias que no parecen ni un poco creíbles.",
     },
   ];
+
+  // Si se añaden o elimian, sobrescribimos array entero
+  if (updatedPosts.length !== posts.value.length) {
+    return (posts.value = updatedPosts);
+  }
+
+  updatedPosts.forEach((updatedPost, index) => {
+    if (index < posts.value.length) {
+      posts.value[index].photo = updatedPost.photo;
+      posts.value[index].title = updatedPost.title;
+      posts.value[index].text = updatedPost.text;
+    } else {
+      posts.value.push(updatedPost);
+    }
+  });
 };
 
 const onSwiper = (swiper) => {
