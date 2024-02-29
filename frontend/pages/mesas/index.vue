@@ -59,10 +59,10 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="container flex align-items-center justify-content-between">
+  <div class="container flex align-items-start justify-content-between">
     <div class="flex gap-big">
       <div class="flex flex-column text-center">
-        <img src="/img/logo.png" alt="Logo" />
+        <img src="/img/logo.png" alt="Logo" id="logo" />
         <h1>MATCH<br />&<br />MEET</h1>
         <div class="flex flex-column gap ms-auto mt-auto">
           <div class="flex gap">
@@ -149,14 +149,15 @@ onMounted(() => {
 <style scoped lang="scss">
 $verde: #00ce7e;
 
+#logo {
+  width: 300px;
+}
+
 .container {
   background: black;
   height: 100vh;
-
-  > div {
-    width: 80%;
-    margin: auto;
-  }
+  padding: 3em;
+  overflow: hidden;
 }
 
 h1 {
