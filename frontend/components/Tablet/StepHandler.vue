@@ -31,84 +31,7 @@ function emitChangeStep(step) {
 /////////////////////////////////
 /////////////////////////////////
 // Cálculo del Tiempo restante
-/////////////////////////////////
-/////////////////////////////////
-/*
-const remaingTimeText = ref('');
-
-// Función para calcular el tiempo restante hasta el próximo bloque de 30 minutos
-const calculateNextBlock = () => {
-  const now = new Date();
-  let nextBlock;
-
-  if (now.getMinutes() < 5) {
-    // Si es menos de 30 minutos pasada la hora, el próximo bloque es a la media hora
-    nextBlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 5, 0);
-  } else {
-    // De lo contrario, el próximo bloque es a la hora siguiente
-    nextBlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0);
-  }
-
-  return nextBlock;
-};
-
-// Función para establecer el tiempo inicial y la cuenta regresiva
-const setupCountdown = () => {
-  const now = new Date();
-  const nextBlock = calculateNextBlock();
-
-  // Calcular la diferencia en segundos
-  const diff = (nextBlock - now) / 1000;
-  const minutes = Math.floor(diff / 60);
-  const seconds = Math.floor(diff % 60);
-  remaingTimeText.value = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-};
-
-// Función para actualizar el texto de tiempo restante
-const updateRemainingTime = () => {
-  const parts = remaingTimeText.value.split(':');
-  let minutes = parseInt(parts[0], 10);
-  let seconds = parseInt(parts[1], 10);
-
-  if (seconds === 0) {
-    if (minutes === 0) {
-      // Reiniciar la cuenta regresiva cuando llegue a 0
-      setupCountdown();
-      resetTablet();
-      return;
-    } else {
-      minutes--;
-    }
-    seconds = 59;
-  } else {
-    seconds--;
-  }
-
-  remaingTimeText.value = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-};
-
-let interval;
-
-onMounted(() => {
-  if (process.client) {
-    setupCountdown(); // Establecer el tiempo inicial restante
-    interval = setInterval(updateRemainingTime, 1000); // Comenzar la cuenta regresiva
-  }
-});
-
-onBeforeUnmount(() => {
-  // Limpiar el intervalo cuando el componente se desmonte
-  clearInterval(interval);
-});
-
-const resetTablet = () => {
-  emitChangeStep(1);
-  companyType.value = '';
-  name.value = '';
-  companyName.value = '';
-  email.value = '';
-};
-*/
+// Cuenta regresiva de 30 minutos
 /////////////////////////////////
 /////////////////////////////////
 
@@ -188,9 +111,12 @@ const resetTablet = () => {
   email.value = '';
 };
 
-
 /////////////////////////////////
-/////////////////////////////////v
+/////////////////////////////////
+// FIN DE
+// Cálculo del Tiempo restante
+/////////////////////////////////
+/////////////////////////////////
 
 // function handleChangeStep(newStep) {
 //   step.value = newStep;
@@ -365,6 +291,7 @@ $naranja: #e2973b;
       font-family: 'Barlow-ExtraLightItalic', sans-serif;
       color: #fff;
       text-transform: uppercase;
+      margin-bottom: 60px;
       .subtitle {
         font-size: 55px;
         text-align: center;
