@@ -28,6 +28,10 @@ $verde: #00ce7e;
   font-size: 1.2em;
   line-height: 1em;
   border: 0.3em solid $verde;
+
+  > div {
+    width: 80%;
+  }
 }
 
 .ocupada {
