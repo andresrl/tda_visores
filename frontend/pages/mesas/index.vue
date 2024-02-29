@@ -57,7 +57,7 @@ const getCurrentCompanyNameOfSpace = (table_name) => {
   const space = spaces.value.find((space) => space.table_name === table_name);
   const slot = slots.value.find((slot) => slot.meeting_space_id === space.id);
 
-  return slot?.organizer?.company_name;
+  return slot?.organizer?.company_trade_name;
 };
 
 onMounted(() => {
