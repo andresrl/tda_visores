@@ -156,8 +156,9 @@ $verde: #00ce7e;
 .container {
   background: black;
   height: 100vh;
-  padding: 3em;
+  padding: 6em;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 h1 {

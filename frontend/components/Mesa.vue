@@ -22,8 +22,8 @@ $verde: #00ce7e;
 
 .mesa {
   text-transform: uppercase;
-  height: 110px;
-  width: 110px;
+  height: 250px;
+  width: 250px;
   font-family: Barlow-Black;
   font-size: 1.2em;
   line-height: 1em;
