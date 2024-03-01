@@ -12,6 +12,12 @@ let interval = null;
 const organizers = ref([]);
 const spaces = ref([]);
 const slots = ref([]);
+const mesaSeleccionada = ref(null);
+
+provide("spaces", spaces);
+provide("slots", slots);
+provide("organizers", organizers);
+provide("mesaSeleccionada", mesaSeleccionada);
 
 const fetchOrganizers = async () => {
   const { data } = await $fetch(`${API_ENDPOINT}/companies`, {
@@ -40,24 +46,28 @@ const fetchMeetingSlots = async () => {
     },
   });
 
-  slots.value = data.map((slot) => {
-    const organizer = organizers.value.find(
-      (organizer) => organizer.id === slot.organizer_id,
-    );
+  // const now = new Date("2024-03-05T09:12:00.000000Z");
+  const now = new Date();
 
-    const meetingSpace = spaces.value.find(
-      (meetingSpace) => meetingSpace.id === slot.meeting_space_id,
-    );
+  slots.value = data
+    .filter((item) => item.organizer_id)
+    .filter((item) => {
+      const startsAt = new Date(item.starts_at);
+      const endsAt = new Date(item.ends_at);
 
-    return { ...slot, organizer, meetingSpace };
-  });
-};
+      return now >= startsAt && now <= endsAt;
+    })
+    .map((slot) => {
+      const organizer = organizers.value.find(
+        (organizer) => organizer.id === slot.organizer_id,
+      );
 
-const getCurrentCompanyNameOfSpace = (table_name) => {
-  const space = spaces.value.find((space) => space.table_name === table_name);
-  const slot = slots.value.find((slot) => slot.meeting_space_id === space.id);
+      const meetingSpace = spaces.value.find(
+        (meetingSpace) => meetingSpace.id === slot.meeting_space_id,
+      );
 
-  return slot?.organizer?.company_trade_name;
+      return { ...slot, organizer, meetingSpace };
+    });
 };
 
 onMounted(() => {
@@ -73,113 +83,140 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div class="container flex align-items-start justify-content-between">
-    <div class="flex gap-big">
-      <div class="flex flex-column text-center">
-        <img src="/img/logo.png" alt="Logo" id="logo" />
-        <h1>MATCH<br />&<br />MEET</h1>
-        <div class="flex flex-column gap ms-auto mt-auto">
-          <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T23')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T25')" />
+  <div>
+    <div class="container align-items-start justify-content-between">
+      <div class="flex gap-big">
+        <div class="flex flex-column text-center">
+          <img src="/img/logo.png" alt="Logo" id="logo" />
+          <h1>MATCH & MEET</h1>
+          <div style="margin: 2em 0">
+            <img
+              src="/img/mano-dedo.png"
+              width="200"
+              style="text-align: center"
+            />
           </div>
-          <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T24')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T26')" />
+          <h2>FIND THE FREE TABLE</h2>
+          <h2>AND CONTACT THE COMPANY</h2>
+          <div class="flex flex-column gap ms-auto mt-auto">
+            <div class="flex gap">
+              <Mesa :mesa="'T23'" @click="mesaSeleccionada = 'T23'" />
+              <Mesa :mesa="'T25'" @click="mesaSeleccionada = 'T25'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T24'" @click="mesaSeleccionada = 'T24'" />
+              <Mesa :mesa="'T26'" @click="mesaSeleccionada = 'T26'" />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="flex">
+        <div class="flex">
+          <div class="flex flex-column gap ms-auto">
+            <div class="flex gap">
+              <Mesa :mesa="'T1'" @click="mesaSeleccionada = 'T1'" />
+              <Mesa :mesa="'T3'" @click="mesaSeleccionada = 'T3'" />
+              <Mesa :mesa="'T5'" @click="mesaSeleccionada = 'T5'" />
+              <Mesa :mesa="'T7'" @click="mesaSeleccionada = 'T7'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T2'" @click="mesaSeleccionada = 'T2'" />
+              <Mesa :mesa="'T4'" @click="mesaSeleccionada = 'T4'" />
+              <Mesa :mesa="'T6'" @click="mesaSeleccionada = 'T6'" />
+              <Mesa :mesa="'T8'" @click="mesaSeleccionada = 'T8'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T9'" @click="mesaSeleccionada = 'T9'" />
+              <Mesa :mesa="'T11'" @click="mesaSeleccionada = 'T11'" />
+              <Mesa :mesa="'T13'" @click="mesaSeleccionada = 'T13'" />
+              <Mesa :mesa="'T15'" @click="mesaSeleccionada = 'T15'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T10'" @click="mesaSeleccionada = 'T10'" />
+              <Mesa :mesa="'T12'" @click="mesaSeleccionada = 'T12'" />
+              <Mesa :mesa="'T14'" @click="mesaSeleccionada = 'T14'" />
+              <Mesa :mesa="'T16'" @click="mesaSeleccionada = 'T16'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T17'" @click="mesaSeleccionada = 'T17'" />
+              <Mesa :mesa="'T19'" @click="mesaSeleccionada = 'T19'" />
+              <Mesa :mesa="'T21'" @click="mesaSeleccionada = 'T21'" />
+            </div>
+            <div class="flex gap">
+              <Mesa :mesa="'T18'" @click="mesaSeleccionada = 'T18'" />
+              <Mesa :mesa="'T20'" @click="mesaSeleccionada = 'T20'" />
+              <Mesa :mesa="'T22'" @click="mesaSeleccionada = 'T22'" />
+            </div>
+          </div>
+        </div>
         <div class="flex flex-column gap ms-auto">
           <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T1')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T3')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T5')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T7')" />
+            <Mesa :mesa="'H1'" />
+            <Mesa :mesa="'H3'" />
           </div>
           <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T2')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T4')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T6')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T8')" />
+            <Mesa :mesa="'H2'" />
+            <Mesa :mesa="'H4'" />
           </div>
           <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T9')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T11')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T13')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T15')" />
+            <Mesa :mesa="'H5'" />
+            <Mesa :mesa="'H7'" />
           </div>
           <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T10')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T12')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T14')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T16')" />
+            <Mesa :mesa="'H6'" />
+            <Mesa :mesa="'H8'" />
           </div>
+        </div>
+        <div class="flex flex-column gap ms-auto">
           <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T17')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T19')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T21')" />
+            <Mesa :mesa="'T27'" @click="mesaSeleccionada = 'T27'" />
+            <Mesa :mesa="'T28'" @click="mesaSeleccionada = 'T28'" />
+            <Mesa :mesa="'T29'" @click="mesaSeleccionada = 'T29'" />
           </div>
-          <div class="flex gap">
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T18')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T20')" />
-            <Mesa :empresa="getCurrentCompanyNameOfSpace('T22')" />
+          <div class="flex gap justify-content-center">
+            <Mesa :mesa="'T30'" @click="mesaSeleccionada = 'T30'" />
+            <Mesa :mesa="'T31'" @click="mesaSeleccionada = 'T31'" />
           </div>
-        </div>
-      </div>
-      <div class="flex flex-column gap ms-auto">
-        <div class="flex gap">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H1')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H3')" />
-        </div>
-        <div class="flex gap">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H2')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H4')" />
-        </div>
-        <div class="flex gap">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H5')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H7')" />
-        </div>
-        <div class="flex gap">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H6')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('H8')" />
-        </div>
-      </div>
-      <div class="flex flex-column gap ms-auto">
-        <div class="flex gap">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('T27')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('T28')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('T29')" />
-        </div>
-        <div class="flex gap justify-content-center">
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('T30')" />
-          <Mesa :empresa="getCurrentCompanyNameOfSpace('T31')" />
+          <BloqueEmpresaSeleccionada />
         </div>
       </div>
     </div>
+    <footer>
+      <img src="/img/footer.png" alt="Footer" />
+    </footer>
   </div>
 </template>
 
 <style scoped lang="scss">
-$verde: #00ce7e;
+$verde: #00c683;
 
-#logo {
+footer {
+  background: $verde;
+  margin-top: auto;
+  padding: 1em;
 }
 
 .container {
   background: black;
-  height: 100vh;
-  padding: 6em;
   overflow: hidden;
   box-sizing: border-box;
+  padding: 3.5em;
 }
 
 h1 {
-  color: white;
-  font-size: 4em;
-  font-family: Barlow-SemiBoldItalic;
+  color: $verde;
+  font-size: 2.7em;
+  font-family: Barlow-ExtraLightItalic;
   line-height: 1;
   margin-top: 2em;
+}
+
+h2 {
+  color: $verde;
+  font-size: 1.6em;
+  font-family: Barlow-ExtraLight;
+  font-style: italic;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .gap {

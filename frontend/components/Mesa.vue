@@ -1,19 +1,42 @@
 <script setup>
-defineProps({
-  id: String,
-  empresa: {
-    type: String,
-    required: false,
-  },
+const props = defineProps({
+  mesa: String,
+});
+
+const spaces = inject("spaces");
+const slots = inject("slots");
+const organizers = inject("organizers");
+const mesaSeleccionada = inject("mesaSeleccionada");
+
+const estaSeleccionada = computed(() => {
+  return mesaSeleccionada.value === props.mesa;
+});
+
+const empresa = computed(() => {
+  const space = spaces.value.find((space) => space.table_name === props.mesa);
+
+  if (space?.user_id) {
+    return organizers.value.find(
+      (organizer) => organizer.id === space?.user_id,
+    );
+  }
+
+  return slots.value.find((slot) => slot.meeting_space_id === space?.id)
+    ?.organizer;
 });
 </script>
 
 <template>
   <div
     class="mesa text-center flex align-items-center justify-content-center"
-    :class="{ libre: !empresa, ocupada: !!empresa }"
+    style="cursor: pointer"
+    :class="{
+      libre: !empresa,
+      ocupada: !!empresa,
+      seleccionada: estaSeleccionada,
+    }"
   >
-    <div>{{ empresa ?? "Libre" }}</div>
+    <div>{{ empresa?.company_trade_name ?? "Libre" }}</div>
   </div>
 </template>
 
@@ -31,6 +54,7 @@ $verde: #00ce7e;
 
   > div {
     width: 80%;
+    overflow: hidden;
   }
 }
 
@@ -40,5 +64,11 @@ $verde: #00ce7e;
 
 .libre {
   background: $verde;
+}
+
+.seleccionada {
+  background: white !important;
+  color: black !important;
+  border-color: white;
 }
 </style>
