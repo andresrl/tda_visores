@@ -63,6 +63,10 @@ const isAnimated = computed(() => {
 $verde: #4db88c;
 $verde-claro: #04c783;
 
+* {
+  font-family: Barlow-SemiBold;
+}
+
 header {
   text-align: center;
   width: 40%;

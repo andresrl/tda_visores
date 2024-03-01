@@ -110,5 +110,6 @@ $verde: #00ce7e;
   margin-top: 2em;
   overflow: hidden;
   flex: 1;
+  font-family: Barlow-ExtraLight;
 }
 </style>
