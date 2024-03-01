@@ -27,9 +27,11 @@ const empresa = computed(() => {
 </script>
 
 <template>
-  <div
+  <button
     class="mesa text-center flex align-items-center justify-content-center"
     style="cursor: pointer"
+    type="button"
+    @click="$emit('seleccionada')"
     :class="{
       libre: !empresa,
       ocupada: !!empresa,
@@ -37,7 +39,7 @@ const empresa = computed(() => {
     }"
   >
     <div>{{ empresa?.company_trade_name ?? "Libre" }}</div>
-  </div>
+  </button>
 </template>
 
 <style scoped lang="scss">
@@ -60,6 +62,7 @@ $verde: #00ce7e;
 
 .ocupada {
   color: $verde;
+  background: black;
 }
 
 .libre {
