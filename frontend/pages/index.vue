@@ -149,7 +149,12 @@ const onSwiper = (swiper) => {
     currentSlideIndex.value = swiperInstance.value.realIndex;
 
     let delay = DELAY_SLIDER_EMOCIONES;
-    if (currentSlideIndex.value === fichas.value.length) {
+
+    // Hay dos slides de tiempo real
+    if (
+      currentSlideIndex.value === fichas.value.length ||
+      currentSlideIndex.value === fichas.value.length + 1
+    ) {
       delay = DELAY_SLIDER_TIEMPO_REAL;
     } else if (currentSlideIndex.value > fichas.value.length) {
       delay = DELAY_SLIDER_POSTS;
@@ -222,10 +227,18 @@ onBeforeUnmount(() => {
         :tiempo-real="tiempoReal"
       />
     </SwiperSlide>
+
+    <SwiperSlide>
+      <SlideTiempoRealSegunda
+        :current-slide-index="currentSlideIndex"
+        :index="fichas.length + 1"
+        :tiempo-real="tiempoReal"
+      />
+    </SwiperSlide>
     <SwiperSlide v-for="(post, index) in posts" :key="post">
       <SlideCompanyPost
         :post="post"
-        :index="fichas.length + 1 + index"
+        :index="fichas.length + 2 + index"
         :current-slide-index="currentSlideIndex"
       />
     </SwiperSlide>

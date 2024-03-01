@@ -18,7 +18,7 @@ const isAnimated = computed(() => {
       <img src="/img/logo.png" alt="" />
     </header>
     <h1 :class="{ 'animate__animated animate__slideInUp': isAnimated }">
-      NETWORKING DATA
+      SMART DATA
     </h1>
     <h2 :class="{ 'animate__animated animate__slideInUp': isAnimated }">
       ITB 2024 REAL TIME DATA
@@ -28,27 +28,45 @@ const isAnimated = computed(() => {
         class="content-izquierda"
         :class="{ 'animate__animated animate__slideInUp': isAnimated }"
       >
-        <div
-          class="info-arriba"
-          :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-        >
-          <div class="numero" style="">{{ tiempoReal.companies }}</div>
-          <div class="texto">Andalusian<br />Companies</div>
-        </div>
         <div style="display: flex; justify-content: space-between">
           <div
             class="info-izquierda"
             :class="{ 'animate__animated animate__slideInUp': isAnimated }"
           >
-            <div class="numero">{{ tiempoReal.professionals }}</div>
-            <div class="texto">Professionals</div>
+            <div class="numero">{{ tiempoReal.visitantes }}</div>
+            <div class="texto">Visitors</div>
           </div>
           <div
             class="info-izquierda"
             :class="{ 'animate__animated animate__slideInUp': isAnimated }"
           >
-            <div class="numero">{{ tiempoReal.meetings }}</div>
-            <div class="texto">Meetings</div>
+            <div class="numero">{{ tiempoReal.edad }}</div>
+            <div class="texto">Average<br />age</div>
+          </div>
+        </div>
+
+        <div
+          class="info-izquierda"
+          :class="{ 'animate__animated animate__slideInUp': isAnimated }"
+        >
+          <div class="numero">{{ tiempoReal.todo || 0 }}%</div>
+          <div class="texto">Happiness</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between">
+          <div
+            class="info-izquierda"
+            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
+          >
+            <div class="numero">{{ tiempoReal.hombres }}%</div>
+            <div class="texto">Men</div>
+          </div>
+          <div
+            class="info-izquierda"
+            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
+          >
+            <div class="numero">{{ tiempoReal.mujeres }}%</div>
+            <div class="texto">Women</div>
           </div>
         </div>
       </div>
@@ -63,6 +81,15 @@ const isAnimated = computed(() => {
 $verde: #4db88c;
 $verde-claro: #04c783;
 
+@keyframes rotateBackground {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 header {
   text-align: center;
   width: 40%;
@@ -73,15 +100,6 @@ footer {
   background: $verde-claro;
   padding: 4em;
   text-align: center;
-}
-
-@keyframes rotateBackground {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 * {
@@ -118,7 +136,7 @@ h2 {
   flex-grow: 1;
   text-align: center;
   margin: auto;
-  gap: 6em;
+  width: 100%;
 }
 
 .content-izquierda,
@@ -126,10 +144,16 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  margin: auto;
+  width: 80%;
+}
+
+.content-derecha {
+  margin: 5em;
 }
 
 .info-izquierda {
-  padding: 5em;
+  padding: 6em;
   position: relative;
 
   &::before {
@@ -149,42 +173,13 @@ h2 {
   .numero {
     font-size: 8em;
     color: white;
+    width: 2em;
+    text-align: center;
+    margin: auto;
   }
 
   .texto {
-    font-size: 1.5em;
-    font-family: Barlow-SemiBold;
-    line-height: 1em;
-    margin-top: -1em;
-    text-transform: uppercase;
-  }
-}
-
-.info-arriba {
-  padding: 10em;
-  position: relative;
-
-  &::before {
-    content: " ";
-    position: absolute;
-    background: url("/img/circulo.png") no-repeat;
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
-    animation: rotateBackground 60s linear infinite;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-
-  .numero {
-    font-size: 16em;
-    color: white;
-  }
-
-  .texto {
-    font-size: 1.5em;
+    font-size: 2.2em;
     font-family: Barlow-SemiBold;
     line-height: 1em;
     margin-top: -1em;
