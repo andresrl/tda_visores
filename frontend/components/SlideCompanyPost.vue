@@ -44,7 +44,6 @@ const isAnimated = computed(() => {
       <div v-if="empresa.meeting_spaces.length" class="mesa">
         {{ empresa.meeting_spaces[0]?.table_name }}
       </div>
-      <div class="mesa">T3</div>
     </div>
 
     <h1 :class="{ 'animate__animated animate__slideInUp': isAnimated }">
