@@ -41,6 +41,7 @@ const empresa = computed(() => {
           alt="Logo"
           width="100%"
           height="200"
+          style="object-fit: contain"
         />
       </div>
     </div>
@@ -64,7 +65,7 @@ $verde: #00ce7e;
 .contenedor {
   border: 0.1em solid white;
   border-radius: 0.1em;
-  padding: 1em 4em;
+  padding: 1em 3em;
   width: 800px;
   margin-top: 3em;
   display: flex;
