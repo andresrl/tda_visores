@@ -38,10 +38,7 @@ const isAnimated = computed(() => {
         </div>
         <div class="tarta">
           <img class="tarta-img" src="/img/tarta.png" alt="Tarta" />
-          <div
-            class="tarta-caja devotion"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja devotion">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["devotion"] }}</div>
               <div class="tarta-percent">%</div>
@@ -49,70 +46,49 @@ const isAnimated = computed(() => {
 
             <div class="tarta-text">Devotion</div>
           </div>
-          <div
-            class="tarta-caja caja-negra longing"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja caja-negra longing">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["longing"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Longing</div>
           </div>
-          <div
-            class="tarta-caja caja-negra enthusiasm"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja caja-verde enthusiasm">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["enthusiasm"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Enthusiasm</div>
           </div>
-          <div
-            class="tarta-caja caja-verde surprise"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja surprise">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["surprise"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Surprise</div>
           </div>
-          <div
-            class="tarta-caja caja-negra tenderness"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja caja-negra tenderness">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["tenderness"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Tenderness</div>
           </div>
-          <div
-            class="tarta-caja caja-negra fervor"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja fervor">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["fervency"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Fervency</div>
           </div>
-          <div
-            class="tarta-caja caja-verde admiration"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja caja-verde admiration">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["admiration"] }}</div>
               <div class="tarta-percent">%</div>
             </div>
             <div class="tarta-text">Admiration</div>
           </div>
-          <div
-            class="tarta-caja caja-negra optimism"
-            :class="{ 'animate__animated animate__slideInUp': isAnimated }"
-          >
+          <div class="tarta-caja caja-negra optimism">
             <div class="tarta-caja-superior">
               <div class="tarta-number">{{ ficha["optimism"] }}</div>
               <div class="tarta-percent">%</div>
@@ -147,12 +123,11 @@ footer {
 }
 
 .reaction-banner {
-  background-color: $verde;
-  color: black;
+  color: $verde;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Barlow-Black";
+  font-family: "Barlow-SemiBold";
   text-align: center;
   padding: 1em 5em;
   margin-left: 6em;
@@ -190,10 +165,12 @@ footer {
   .tarta-caja {
     position: absolute;
     background-color: white;
-    height: 300px;
-    width: 300px;
+    height: 280px;
+    width: 280px;
     border-radius: 0.3em;
     border: 0.2em solid;
+    transform: scale(0.5);
+    animation: scaleAA 1.2s linear infinite 0.2s;
   }
 
   .caja-negra {
@@ -237,50 +214,75 @@ footer {
 
   .devotion {
     top: -7em;
-    left: 36em;
-    zoom: 0.9;
+    left: 32em;
+    animation-delay: 0s;
+
+    //zoom: 0.9;
   }
 
   .optimism {
     top: -4em;
-    left: 26em;
-    zoom: 0.8;
+    left: 20em;
+    //zoom: 0.8;
+    animation-delay: 0.2s;
   }
 
   .admiration {
-    top: 10em;
-    left: 18em;
-    zoom: 0.7;
+    top: 6em;
+    left: 10em;
+    //zoom: 0.7;
+    animation-delay: 0.4s;
   }
 
   .fervor {
-    top: 32em;
-    left: 26em;
-    zoom: 0.6;
+    top: 18em;
+    left: 12em;
+    //zoom: 0.6;
+    animation-delay: 0.6s;
   }
 
   .tenderness {
-    top: 25em;
-    left: 35em;
-    zoom: 0.8;
+    top: 20em;
+    left: 28em;
+    //zoom: 0.8;
+    animation-delay: 0.8s;
   }
 
   .surprise {
-    top: 35em;
-    left: 86em;
-    zoom: 0.5;
+    top: 17em;
+    left: 42em;
+    //zoom: 0.5;
+    animation-delay: 1s;
   }
 
   .enthusiasm {
-    top: 10em;
-    left: 64em;
-    zoom: 0.8;
+    top: 6em;
+    left: 52em;
+    //zoom: 0.8;
+    animation-delay: 1.2s;
   }
 
   .longing {
-    top: -5em;
-    left: 60em;
-    zoom: 0.8;
+    top: -6em;
+    left: 46em;
+    animation-delay: 1.2s;
+  }
+}
+
+.animateScale {
+  transform: scale(0.5);
+  animation: scaleAA 1.2s linear infinite 0.2s;
+}
+
+@keyframes scaleAA {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
