@@ -8,6 +8,16 @@ const props = defineProps({
 const isAnimated = computed(() => {
   return props.currentSlideIndex === props.index;
 });
+
+const emocionPredominanteNumero = computed(() => {
+  return props.tiempoReal["emocion predominante"]?.split("_")?.[1];
+});
+
+const emocionPredominanteTexto = computed(() => {
+  return props.tiempoReal["emocion predominante"]
+    ?.split("_")?.[0]
+    ?.toUpperCase();
+});
 </script>
 <template>
   <div
@@ -49,8 +59,8 @@ const isAnimated = computed(() => {
           class="info-izquierda"
           :class="{ 'animate__animated animate__slideInUp': isAnimated }"
         >
-          <div class="numero">{{ tiempoReal.todo || 0 }}%</div>
-          <div class="texto">Happiness</div>
+          <div class="numero">{{ emocionPredominanteNumero }}%</div>
+          <div class="texto">{{ emocionPredominanteTexto }}</div>
         </div>
 
         <div style="display: flex; justify-content: space-between">
