@@ -22,7 +22,7 @@ const wrapperClass = computed(() => {
 
 </script>
 <template>
-  <div class="wrapper" :class="wrapperClass">
+  <div class="wrapper" :Xclass="wrapperClass">
     <slot></slot>
   </div>
 </template>
@@ -39,7 +39,7 @@ $naranja: #e2973b;
 .wrapper {
   width: 800px;
   height: 1280px;
-  background-color: #f1f1f1;
+  background-color: #000;
   @media (min-width: 801px) {
     width: 1280px;
     height: 800px;
