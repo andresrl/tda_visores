@@ -130,95 +130,108 @@ const resetTablet = () => {
 
       <div class="step1Wrapper">
       <!-- <Tablet_Header countDownCount="false" ctaGoToStep="0" ctaText="false" /> -->
-        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="2" ctaText="false" @changeStep="emitChangeStep(2)" />
-        <div class="title">
-          AVAILABLE MEETING POINT
-        </div>
-        <div class="scan-subtitle">
-          <div class="scanIcon">
-            <img src="/img/tablet/hand-tablet-icon-vertical@2x.png" alt="">
+        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="2" ctaText="false" tableText="Table 23" @changeStep="emitChangeStep(2)" />
+        <div class="frame">
+          <div class="title">
+            AVAILABLE MEETING POINT
           </div>
-          <div class="text">
-            <div class="subtitle">SCAN TO RESERVE</div>
-            <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
+          <div class="scan-subtitle">
+            <div class="scanIcon">
+              <img src="/img/tablet/mano-tablet-blanco@2x.png" alt="">
+            </div>
+            <div class="text">
+              <div class="subtitle">SCAN TO RESERVE</div>
+              <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
+            </div>
           </div>
-        </div>
-        <div class="cta">
-          <div class="btn" @click="emitChangeStep(2)">Simular escaneo</div>
+          <div class="cta">
+            <div class="btn" @click="emitChangeStep(2)">Simular escaneo</div>
+          </div>
+        
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
-        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="3" ctaText="false" @changeStep="emitChangeStep(1)" />
-        <div class="title">
-          WAITING FOR THE PROFESSIONAL
-        </div>
-        <div class="scan-subtitle">
-          <div class="scanIcon">
-            <img src="/img/tablet/hand-tablet-icon-vertical@2x.png" alt="">
+        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="3" ctaText="false" tableText="Table 23" @changeStep="emitChangeStep(1)" />
+        <div class="frame">
+          <div class="title">
+            MEETING STARTED
           </div>
-          <div class="text">
-            <div class="subtitle">SCAN PROFESSIONAL ID</div>
+          <div class="waiting">
+            WAITING FOR THE PROFESSIONAL
           </div>
-        </div>
-        <div class="cta">
-          <div class="or">Or</div>
-          <div class="btn" @click="emitChangeStep(3)">Continue</div>
+          <div class="scan-subtitle">
+            <div class="scanIcon">
+              <img src="/img/tablet/mano-tablet-verde@2x.png" alt="">
+            </div>
+            <div class="text">
+              <div class="subtitle">SCAN PROFESSIONAL BRACELET</div>
+            </div>
+            <div class="cta">
+              <div class="or">Or</div>
+              <div class="btn" @click="emitChangeStep(3)">Continue</div>
+            </div>
+          </div>
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 3" :step="step">
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="4" ctaText="false" @changeStep="emitChangeStep(1)" />
+      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="4" ctaText="Exit Table" tableText="false" @changeStep="emitChangeStep(1)" />
       <div class="step3Wrapper">
-        <div class="form">
-          <input type="text" v-model="name" name="name" id="name" placeholder="Name" class="name">
-          <input type="text" v-model="companyName" name="companyName" id="companyName" placeholder="Company Name" class="companyName">
-          <select v-model="companyType" name="companyType" id="companyType" class="companyType">
-            <option value="default" disabled selected>Company Type</option>
-            <option value="Company Type 1">Company Type 1</option>
-            <option value="Company Type 2">Company Type 2</option>
-          </select>
-          <input type="text" v-model="email" name="email" id="email" placeholder="Email" class="email">
-          <div class="disclaimerAcceptance">
-            <input v-model="disclaimerAcceptance" type="checkbox" id="disclaimer" class="checkbox">
-            <label for="disclaimer" class="label"></label>
-            <div class="realLabel" @click="emitChangeStep(4)">Disclaimer Acceptance</div>
+        <div class="frame">
+          <div class="form">
+            <input type="text" v-model="name" name="name" id="name" placeholder="Name" class="name">
+            <input type="text" v-model="companyName" name="companyName" id="companyName" placeholder="Company Name" class="companyName">
+            <select v-model="companyType" name="companyType" id="companyType" class="companyType">
+              <option value="default" disabled selected>Company Type</option>
+              <option value="Company Type 1">Company Type 1</option>
+              <option value="Company Type 2">Company Type 2</option>
+            </select>
+            <input type="text" v-model="email" name="email" id="email" placeholder="Email" class="email">
+            <div class="disclaimerAcceptance">
+              <input v-model="disclaimerAcceptance" type="checkbox" id="disclaimer" class="checkbox">
+              <label for="disclaimer" class="label"></label>
+              <div class="realLabel" @click="emitChangeStep(4)">Disclaimer Acceptance</div>
+              <div class="btn" @click="emitChangeStep(5)">Start Meeting</div>
+            </div>
           </div>
-        </div>
-        <div class="cta">
-          <div class="btn" @click="emitChangeStep(5)">Start Meeting</div>
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 4" :step="step">
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="5" ctaText="" @changeStep="emitChangeStep(1)" />
+      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="5" ctaText="false" @changeStep="emitChangeStep(1)" />
+      
       <div class="step4Wrapper">
-        <h2>Disclaimer Acceptance</h2>
-        <div class="content">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        </div>
-        <div class="cta">
-          <div class="btn" @click="emitChangeStep(3)">Back</div>
+        <div class="frame">
+          <h2>Disclaimer Acceptance</h2>
+          <div class="content">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          </div>
+          <div class="cta">
+            <div class="btn" @click="emitChangeStep(3)">Back</div>
+          </div>
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 5" :step="step">
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="1" ctaText="Finish Meeting" @changeStep="emitChangeStep(1)" />
+      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="1" ctaText="false" tableText="false" @changeStep="emitChangeStep(1)" />
       <div class="step5Wrapper">
-        <div class="title">
-          MEETING IN COURSE
-        </div>
-        <div class="companyDetails">
-          <div class="logo">
-            <img src="https://place-hold.it/800x450" alt="">
+        <div class="frame">
+          <div class="title">
+            MEETING IN COURSE
           </div>
-          <div class="name">
-            Company Name XYZ
+          <div class="companyDetails">
+            <div class="logo">
+              <img src="https://place-hold.it/800x450" alt="">
+            </div>
+            <div class="name">
+              Company Name XYZ
+            </div>
           </div>
         </div>
       </div>
@@ -254,11 +267,23 @@ $naranja: #e2973b;
   }
 }
 
+.btn {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 20px 40px;
+  font-family: 'Barlow-ExtraLightItalic', sans-serif;
+  background-color: $verde;
+  font-size: 33px;
+  &:hover {
+    background-color: darken($verde, 15%);
+  }
+}
+
 .step1Wrapper {
   .title {
     font-size: 80px;
     text-align: center;
-    margin: 80px 30px 30px 30px;
+    padding: 80px 30px 30px 30px;
     color: #fff;
     font-family: 'Barlow-Black';
     line-height: 80px;
@@ -266,8 +291,17 @@ $naranja: #e2973b;
       font-size: 70px;
     }
   }
+  .frame {
+    background-color: $verde;
+    margin: 0 80px 80px 80px;
+    min-height: 1060px;
+    @media (min-width: 801px) {
+      min-height: 540px;
+    }
+  }
   .scan-subtitle {
-    margin: 80px 50px;
+    padding: 30px 0;
+    // margin: 80px 50px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -277,13 +311,13 @@ $naranja: #e2973b;
       width: 100%;
       margin: 0 0 40px 0;
       img {
-        width: 280px;
+        width: 200px;
       }
       @media (min-width: 801px) {
         width: auto;
         margin: 0 40px 0 0;
         img {
-          width: 280px;
+          width: 200px;
         }
       }
     }
@@ -316,7 +350,7 @@ $naranja: #e2973b;
     justify-content: center;
     // width: 30%;
     margin: 0 auto;
-    margin-top: 80px;
+    // margin-top: 80px;
     .btn {
       position: absolute;
       bottom: 20px;
@@ -328,16 +362,33 @@ $naranja: #e2973b;
 }
   
 .step2Wrapper {
+
+  .frame {
+    background-color: #000;
+    border: 2px solid $verde;
+    margin: 0 80px 80px 80px;
+    min-height: 1060px;
+    @media (min-width: 801px) {
+      min-height: 540px;
+    }
+  }
   .title {
     font-size: 80px;
     text-align: center;
-    margin: 80px 30px 30px 30px;
+    margin: 80px 30px 0px 30px;
     color: #fff;
     font-family: 'Barlow-Black';
     line-height: 80px;
     @media (min-width: 801px) {
       font-size: 70px;
     }
+  }
+  .waiting {
+    font-size: 50px;
+    text-align: center;
+    color: $verde;
+    font-family: 'Barlow-Light';
+    line-height: 55px;
   }
   .scan-subtitle {
     margin: 50px 50px;
@@ -362,14 +413,19 @@ $naranja: #e2973b;
     }
     .text {
       font-family: 'Barlow-ExtraLightItalic', sans-serif;
-      color: #fff;
+      color: $verde;
       text-transform: uppercase;
       .subtitle {
-        font-size: 55px;
+        font-size: 40px;
+        line-height: 45px;
         text-align: center;
         margin:0 0 5px;
-        @media (min-width: 801px) {
-          font-size: 60px;
+      }
+      @media (min-width: 801px) {
+        width: 30%;
+        .subtitle {
+          font-size: 40px;
+          text-align: left;
         }
       }
     }
@@ -381,21 +437,25 @@ $naranja: #e2973b;
     color: #000;
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
+    // margin: 0 auto;
     justify-content: center;
     align-items: center;
-    width: 100%;
     font-family: 'Barlow-ExtraLightItalic', sans-serif;
-    font-size: 70px;
+    // font-size: 70px;
     color: #fff;
     .btn {
-      width: 70%;
+      // width: 70%;
     }
+    .or {
+        font-size: 30px;
+        color: $verde;
+        text-transform: uppercase;
+        margin: 40px 0;
+      }
     @media (min-width: 801px) {
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      width: 70%;
       .companyType {
         margin-bottom: 0;
         width: 47%;
@@ -404,13 +464,22 @@ $naranja: #e2973b;
         margin-right: 30px;
       }
       .btn {
-        width: 47%;
+        // width: 47%;
       }
     }
   }
 }
 
 .step3Wrapper {
+  .frame {
+    background-color: #000;
+    border: 2px solid $verde;
+    margin: 0 80px 80px 80px;
+    min-height: 1060px;
+    @media (min-width: 801px) {
+      min-height: 540px;
+    }
+  }
 
   .form {
     display: flex;
@@ -426,11 +495,18 @@ $naranja: #e2973b;
       padding: 20px 40px;
       width: 80%;
       margin-bottom: 40px;
+      border: 3px solid $verde;
+      background-color: #000;
+      color: $verde;
+      &::placeholder {
+        color: $verde;
+      } 
     }
     .companyType {
-      border: none;
-      background-color: #fff;
-      color: #000;
+      border: 3px solid $verde;
+      background-color: #000;
+      color: $verde;
+      text-align: center;
       padding: 20px 40px;
       width: 80%;
       font-family: 'Barlow-ExtraLightItalic', sans-serif;
@@ -445,8 +521,11 @@ $naranja: #e2973b;
       font-family: 'Barlow-ExtraLightItalic', sans-serif;
       font-size: 33px;
       text-transform: uppercase;
-      width: 80%;
+      flex-wrap: wrap;
+      // width: 80%;
       margin-bottom: 30px;
+      color: #fff;
+      padding: 80px;
     }
     .checkbox {
       display: none; /* Oculta la casilla de verificación original */
@@ -463,6 +542,7 @@ $naranja: #e2973b;
     }
 
     .realLabel {
+      width: 80%;
       cursor: pointer;
       text-decoration: underline;
     }
@@ -489,6 +569,7 @@ $naranja: #e2973b;
       justify-content: space-between;
       width: 80%;
       margin: 0 auto;
+      
       margin-top: 80px;
       input {
         width: 47%;
@@ -497,34 +578,45 @@ $naranja: #e2973b;
         width: 47%;
       }
       .disclaimerAcceptance {
-        width: 47%;
+        width: 100%;
+        padding: 0;
+      }
+      .realLabel {
+        width: 46%;
       }
     }
   }
-  .cta {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .btn {
+    width: 100%;
+    margin-top: 30px;
+  }
+  @media (min-width: 801px) {
     .btn {
-      width: 80%;
-    }
-    @media (min-width: 801px) {
-      .btn {
-        width: 47%;
-      }
+      width: 422px;
+      margin-top: 0 ;
     }
   }
 }
 
 .step4Wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  margin-top: 40px;
-  width: 90%;
-  color: #fff;
+  .frame {
+    background-color: #000;
+    border: 2px solid $verde;
+    margin: 0 80px 80px 80px;
+    min-height: 1060px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 90%;
+    color: #fff;
+    padding: 40px;
+    @media (min-width: 801px) {
+      min-height: 300px;
+    }
+  }
   h2 {
     font-family: 'Barlow-SemiBold', sans-serif;
     font-size: 30px;
@@ -536,7 +628,7 @@ $naranja: #e2973b;
     overflow-y: scroll;
     font-family: 'Barlow-ExtraLight', sans-serif;
     @media (min-width: 801px) {
-      height: 297px;
+      height: 200px;
     }
   }
   .cta {
@@ -551,10 +643,20 @@ $naranja: #e2973b;
 }
 
 .step5Wrapper {
+
+  .frame {
+    background-color: $rojo;
+    margin: 0 80px 80px 80px;
+    min-height: 1060px;
+    @media (min-width: 801px) {
+      min-height: 540px;
+    }
+  }
   .title {
     font-size: 80px;
     text-align: center;
-    margin: 80px 30px 30px 30px;
+    // margin: 80px 30px 30px 30px;
+    padding-top: 40px;
     color: #fff;
     font-family: 'Barlow-Black';
     line-height: 80px;
