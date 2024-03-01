@@ -83,7 +83,14 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div>
+  <div
+    style="
+      height: 100vh;
+      background: black;
+      display: flex;
+      flex-direction: column;
+    "
+  >
     <div class="container align-items-start justify-content-between">
       <div class="flex gap-big">
         <div class="flex flex-column text-center">
@@ -92,7 +99,7 @@ onBeforeUnmount(() => {
           <div style="margin: 2em 0">
             <img
               src="/img/mano-dedo.png"
-              width="200"
+              width="140"
               style="text-align: center"
             />
           </div>
@@ -100,50 +107,50 @@ onBeforeUnmount(() => {
           <h2>AND CONTACT THE COMPANY</h2>
           <div class="flex flex-column gap ms-auto mt-auto">
             <div class="flex gap">
-              <Mesa :mesa="'T23'" @click="mesaSeleccionada = 'T23'" />
-              <Mesa :mesa="'T25'" @click="mesaSeleccionada = 'T25'" />
+              <Mesa :mesa="'T23'" @click.native="mesaSeleccionada = 'T23'" />
+              <Mesa :mesa="'T25'" @click.native="mesaSeleccionada = 'T25'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T24'" @click="mesaSeleccionada = 'T24'" />
-              <Mesa :mesa="'T26'" @click="mesaSeleccionada = 'T26'" />
+              <Mesa :mesa="'T24'" @click.native="mesaSeleccionada = 'T24'" />
+              <Mesa :mesa="'T26'" @click.native="mesaSeleccionada = 'T26'" />
             </div>
           </div>
         </div>
         <div class="flex">
           <div class="flex flex-column gap ms-auto">
             <div class="flex gap">
-              <Mesa :mesa="'T1'" @click="mesaSeleccionada = 'T1'" />
-              <Mesa :mesa="'T3'" @click="mesaSeleccionada = 'T3'" />
-              <Mesa :mesa="'T5'" @click="mesaSeleccionada = 'T5'" />
-              <Mesa :mesa="'T7'" @click="mesaSeleccionada = 'T7'" />
+              <Mesa :mesa="'T1'" @click.native="mesaSeleccionada = 'T1'" />
+              <Mesa :mesa="'T3'" @click.native="mesaSeleccionada = 'T3'" />
+              <Mesa :mesa="'T5'" @click.native="mesaSeleccionada = 'T5'" />
+              <Mesa :mesa="'T7'" @click.native="mesaSeleccionada = 'T7'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T2'" @click="mesaSeleccionada = 'T2'" />
-              <Mesa :mesa="'T4'" @click="mesaSeleccionada = 'T4'" />
-              <Mesa :mesa="'T6'" @click="mesaSeleccionada = 'T6'" />
-              <Mesa :mesa="'T8'" @click="mesaSeleccionada = 'T8'" />
+              <Mesa :mesa="'T2'" @click.native="mesaSeleccionada = 'T2'" />
+              <Mesa :mesa="'T4'" @click.native="mesaSeleccionada = 'T4'" />
+              <Mesa :mesa="'T6'" @click.native="mesaSeleccionada = 'T6'" />
+              <Mesa :mesa="'T8'" @click.native="mesaSeleccionada = 'T8'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T9'" @click="mesaSeleccionada = 'T9'" />
-              <Mesa :mesa="'T11'" @click="mesaSeleccionada = 'T11'" />
-              <Mesa :mesa="'T13'" @click="mesaSeleccionada = 'T13'" />
-              <Mesa :mesa="'T15'" @click="mesaSeleccionada = 'T15'" />
+              <Mesa :mesa="'T9'" @click.native="mesaSeleccionada = 'T9'" />
+              <Mesa :mesa="'T11'" @click.native="mesaSeleccionada = 'T11'" />
+              <Mesa :mesa="'T13'" @click.native="mesaSeleccionada = 'T13'" />
+              <Mesa :mesa="'T15'" @click.native="mesaSeleccionada = 'T15'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T10'" @click="mesaSeleccionada = 'T10'" />
-              <Mesa :mesa="'T12'" @click="mesaSeleccionada = 'T12'" />
-              <Mesa :mesa="'T14'" @click="mesaSeleccionada = 'T14'" />
-              <Mesa :mesa="'T16'" @click="mesaSeleccionada = 'T16'" />
+              <Mesa :mesa="'T10'" @click.native="mesaSeleccionada = 'T10'" />
+              <Mesa :mesa="'T12'" @click.native="mesaSeleccionada = 'T12'" />
+              <Mesa :mesa="'T14'" @click.native="mesaSeleccionada = 'T14'" />
+              <Mesa :mesa="'T16'" @click.native="mesaSeleccionada = 'T16'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T17'" @click="mesaSeleccionada = 'T17'" />
-              <Mesa :mesa="'T19'" @click="mesaSeleccionada = 'T19'" />
-              <Mesa :mesa="'T21'" @click="mesaSeleccionada = 'T21'" />
+              <Mesa :mesa="'T17'" @click.native="mesaSeleccionada = 'T17'" />
+              <Mesa :mesa="'T19'" @click.native="mesaSeleccionada = 'T19'" />
+              <Mesa :mesa="'T21'" @click.native="mesaSeleccionada = 'T21'" />
             </div>
             <div class="flex gap">
-              <Mesa :mesa="'T18'" @click="mesaSeleccionada = 'T18'" />
-              <Mesa :mesa="'T20'" @click="mesaSeleccionada = 'T20'" />
-              <Mesa :mesa="'T22'" @click="mesaSeleccionada = 'T22'" />
+              <Mesa :mesa="'T18'" @click.native="mesaSeleccionada = 'T18'" />
+              <Mesa :mesa="'T20'" @click.native="mesaSeleccionada = 'T20'" />
+              <Mesa :mesa="'T22'" @click.native="mesaSeleccionada = 'T22'" />
             </div>
           </div>
         </div>
@@ -167,13 +174,13 @@ onBeforeUnmount(() => {
         </div>
         <div class="flex flex-column gap ms-auto">
           <div class="flex gap">
-            <Mesa :mesa="'T27'" @click="mesaSeleccionada = 'T27'" />
-            <Mesa :mesa="'T28'" @click="mesaSeleccionada = 'T28'" />
-            <Mesa :mesa="'T29'" @click="mesaSeleccionada = 'T29'" />
+            <Mesa :mesa="'T27'" @click.native="mesaSeleccionada = 'T27'" />
+            <Mesa :mesa="'T28'" @click.native="mesaSeleccionada = 'T28'" />
+            <Mesa :mesa="'T29'" @click.native="mesaSeleccionada = 'T29'" />
           </div>
           <div class="flex gap justify-content-center">
-            <Mesa :mesa="'T30'" @click="mesaSeleccionada = 'T30'" />
-            <Mesa :mesa="'T31'" @click="mesaSeleccionada = 'T31'" />
+            <Mesa :mesa="'T30'" @click.native="mesaSeleccionada = 'T30'" />
+            <Mesa :mesa="'T31'" @click.native="mesaSeleccionada = 'T31'" />
           </div>
           <BloqueEmpresaSeleccionada />
         </div>
@@ -206,7 +213,7 @@ h1 {
   font-size: 2.7em;
   font-family: Barlow-ExtraLightItalic;
   line-height: 1;
-  margin-top: 2em;
+  margin-top: 1.5em;
 }
 
 h2 {
