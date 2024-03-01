@@ -65,6 +65,7 @@ $verde: #00ce7e;
   border: 0.1em solid white;
   border-radius: 0.1em;
   padding: 1em 4em;
+  width: 800px;
   margin-top: 3em;
   display: flex;
   flex-direction: column;
