@@ -18,11 +18,12 @@ const isAnimated = computed(() => {
   >
     <div class="content">
       <img
+        style="margin-top: -3em"
         :src="imagen"
         class="emocion-img"
         :class="{ 'animate__animated animate__fadeInDown': isAnimated }"
       />
-      <div>
+      <div style="margin-top: -2em">
         <div
           class="reaction-banner"
           :class="{ 'animate__animated animate__bounceIn': isAnimated }"
@@ -97,19 +98,23 @@ const isAnimated = computed(() => {
           </div>
         </div>
       </div>
+      <footer>
+        <img src="/img/footer.png" alt="Footer" />
+      </footer>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 $verde: #00ce7e;
+$verde-claro: #04c783;
 
 footer {
-  background-color: $verde;
-  padding: 3em 1em 1em;
+  background: $verde-claro;
+  text-align: center;
   margin-top: auto;
+  padding: 3em;
 }
-
 .wrapper {
   //padding: 4em;
   //background: #606060;
