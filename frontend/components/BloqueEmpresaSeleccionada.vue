@@ -27,7 +27,7 @@ const empresa = computed(() => {
 </script>
 
 <template>
-  <div v-if="empresa" class="contenedor">
+  <div class="contenedor">
     <div style="display: flex">
       <div style="flex: 1">
         <div class="table">Table</div>

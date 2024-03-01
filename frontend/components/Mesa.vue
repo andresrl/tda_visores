@@ -67,6 +67,7 @@ $verde: #00ce7e;
 
 .libre {
   background: $verde;
+  color: black;
 }
 
 .seleccionada {
