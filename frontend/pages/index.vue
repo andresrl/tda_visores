@@ -220,27 +220,27 @@ onBeforeUnmount(() => {
       />
     </SwiperSlide>
 
-    <!--    <SwiperSlide>-->
-    <!--      <SlideTiempoReal-->
-    <!--        :current-slide-index="currentSlideIndex"-->
-    <!--        :index="fichas.length"-->
-    <!--        :tiempo-real="tiempoReal"-->
-    <!--      />-->
-    <!--    </SwiperSlide>-->
+    <SwiperSlide>
+      <SlideTiempoReal
+        :current-slide-index="currentSlideIndex"
+        :index="fichas.length"
+        :tiempo-real="tiempoReal"
+      />
+    </SwiperSlide>
 
-    <!--    <SwiperSlide>-->
-    <!--      <SlideTiempoRealSegunda-->
-    <!--        :current-slide-index="currentSlideIndex"-->
-    <!--        :index="fichas.length + 1"-->
-    <!--        :tiempo-real="tiempoReal"-->
-    <!--      />-->
-    <!--    </SwiperSlide>-->
-    <!--    <SwiperSlide v-for="(post, index) in posts" :key="post">-->
-    <!--      <SlideCompanyPost-->
-    <!--        :post="post"-->
-    <!--        :index="fichas.length + 2 + index"-->
-    <!--        :current-slide-index="currentSlideIndex"-->
-    <!--      />-->
-    <!--    </SwiperSlide>-->
+    <SwiperSlide>
+      <SlideTiempoRealSegunda
+        :current-slide-index="currentSlideIndex"
+        :index="fichas.length + 1"
+        :tiempo-real="tiempoReal"
+      />
+    </SwiperSlide>
+    <SwiperSlide v-for="(post, index) in posts" :key="post">
+      <SlideCompanyPost
+        :post="post"
+        :index="fichas.length + 2 + index"
+        :current-slide-index="currentSlideIndex"
+      />
+    </SwiperSlide>
   </Swiper>
 </template>
