@@ -252,8 +252,8 @@ const resetTablet = () => {
               <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
                 <div class="btn" @click="scanNFCStep1Click">Press to Scan Bracelet</div>
-                  <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div>
-                  <pre id="log" style="color: #ffffff">NFC Status: {{ nfcLog2 }}</pre> -->
+                  <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div> -->
+                  <pre id="log" style="color: #ffffff">{{ nfcLog2 }}</pre>
             </div>
             </div>
           </div>
