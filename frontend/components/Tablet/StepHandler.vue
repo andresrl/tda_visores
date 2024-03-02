@@ -164,6 +164,13 @@ const scanNFCStep1Click = async () => {
       const ndef = new NDEFReader();
       await ndef.scan();
       nfcLog2.value = "> Scan started";
+      ndef.addEventListener("readingerror", () => {
+        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
+      });
+      ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        nfcLog2.value = `> Serial Number: ${serialNumber}`
+        nfcSerialNumberExhibitor.value = serialNumber;
+      });
     } catch (error) {
       nfcLog3.value = "Argh! " + error
     }
