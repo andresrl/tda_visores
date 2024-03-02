@@ -17,14 +17,17 @@ const name = ref("");
 const companyName = ref("");
 const email = ref("");
 const disclaimerAcceptance = ref("");
-const nfcContent = ref("");
+// const nfcContent = ref("");
 const nfcStatus = ref("");
+// const nfcLog = ref("");
 const nfcLog0 = ref("");
-const nfcLog = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
+const nfcSerialNumberSimulate = ref(true);
 const nfcSerialNumber = ref("");
+const nfcSerialNumberTest1 = ref("3e:56:38:3c");
+const nfcSerialNumberTest2 = ref("8e:38:40:3c");
 // const remaingTimeText = ref("25:00");
 
 // Define los eventos que el componente puede emitir
@@ -102,8 +105,6 @@ const updateRemainingTime = () => {
 /////////////////////////////////
 /////////////////////////////////
 
-
-
 let interval;
 
 onMounted(() => {
@@ -111,7 +112,6 @@ onMounted(() => {
     setupCountdown(); // Establecer el tiempo inicial restante
     interval = setInterval(updateRemainingTime, 1000); // Comenzar la cuenta regresiva
   }
-  navigator.permissions.query({ name: 'nfc'})
 });
 
 /////////////////////////////////
@@ -120,78 +120,48 @@ onMounted(() => {
 /////////////////////////////////
 if (process.client) {
   if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)){
-    // Let's log a warning if the sample is not supposed to execute on this
-    // version of Chrome.
     if (89 > parseInt(RegExp.$1)) {
       nfcStatus.value = 'Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.';
-      // ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
     }
   }
-
-  // const log = ChromeSamples.log;
-
-  if (!("NDEFReader" in window)) {
-    // ChromeSamples.setStatus("Web NFC is not available. Use Chrome on Android.");
-    nfcStatus.value = 'Web NFC is not available. Use Chrome on Android.';
-  }
-
-  // scanButton.addEventListener("click", async () => {
-  //   log("User clicked scan button");
-
-
-  const readNFCTagSimulated = async () => {
-    nfcLog2.value = "> Scan started<br> `> Serial Number: 1234567890`";
-    // log("> Scan started");
-
-    // log(`> Serial Number: 1234567890`);
-    // log(`> Records: (1)`);
-  }   
-
-  // const readNFInterval = setInterval(() => {
-  //     // readNFCTagSimulated();
-  //     readNFCTag()
-  //   }, 1000);
-
-  // readNFInterval;
-
 }
 
-const scanNFCclicked = async () => {
+const scanNFCStep1Click = async () => {
 // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
-  console.log("readNFCTag")
+  if(!nfcSerialNumberSimulate.value) {
+    nfcSerialNumber.value = nfcSerialNumberTest1.value;
+  }
+  else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
       nfcLog2.value = "> Scan started";
-      // log("> Scan started");
-
+  
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
-        // log("Argh! Cannot read data from the NFC tag. Try another one?");
       });
-
+  
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
         nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumber.value = serialNumber;
-        // log(`> Serial Number: ${serialNumber}`);
-        // log(`> Records: (${message.records.length})`);
       });
     } catch (error) {
       nfcLog3.value = "Argh! " + error
-      // log("Argh! " + error);
     }
+  }
 }
 
-
-// if(props.step === 1) {
-//   // readNFCTagSimulated();
-//   readNFCTag();
-// }
-
+watch(nfcSerialNumber, (newVal, oldVal) => {
+  console.log("CHANGE DETECTED");
+  if (newVal !== "") {
+    nfcSerialNumber.value = newVal.replace(/:/g, "");
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumber.value}`;
+    emitChangeStep(2);
+  }
+});
 
 onBeforeUnmount(() => {
-  // Limpiar el intervalo cuando el componente se desmonte
   clearInterval(interval);
 });
 
@@ -204,14 +174,6 @@ const resetTablet = () => {
   email.value = '';
 };
 
-
-watch(() => nfcSerialNumber, (newVal, oldVal) => {
-  if (newVal !== "") {
-    nfcSerialNumber.value = newVal.replace(/:/g, "");
-    nfcLog2.value = `> Serial Number: newVal}`
-    emitChangeStep(2)
-  }
-});
 
 </script>
 
@@ -243,7 +205,7 @@ watch(() => nfcSerialNumber, (newVal, oldVal) => {
               <div class="subtitle">SCAN TO RESERVE</div>
               <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
-                <div class="btn" @click="scanNFCclicked">Press to Scan Bracelet</div>
+                <div class="btn" @click="scanNFCStep1Click">Press to Scan Bracelet</div>
                 <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div>
                 <pre id="log" style="color: #ffffff">NFC Status: {{ nfcLog2 }}</pre>
             </div>
