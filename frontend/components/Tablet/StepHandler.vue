@@ -109,6 +109,7 @@ onMounted(() => {
     setupCountdown(); // Establecer el tiempo inicial restante
     interval = setInterval(updateRemainingTime, 1000); // Comenzar la cuenta regresiva
   }
+  navigator.permissions.query({ name: 'nfc'})
 });
 
 /////////////////////////////////
