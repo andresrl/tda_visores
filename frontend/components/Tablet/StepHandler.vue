@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps({
   step: {
@@ -173,6 +173,7 @@ const scanNFCclicked = async () => {
 
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
         nfcLog2.value = `> Serial Number: ${serialNumber}`
+        nfcSerialNumber.value = serialNumber;
         // log(`> Serial Number: ${serialNumber}`);
         // log(`> Records: (${message.records.length})`);
       });
@@ -204,6 +205,12 @@ const resetTablet = () => {
 };
 
 
+watch(() => nfcSerialNumber, (newVal, oldVal) => {
+  if (newVal !== "") {
+    nfcLog2.value = `> Serial Number: newVal}`
+    emitChangeStep(2)
+  }
+});
 
 </script>
 
@@ -248,6 +255,9 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
+      <div style="color: #fff;">
+        nfcSerialNumber: {{ nfcSerialNumber }}
+      </div>
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
         <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="3" ctaText="false" tableText="Table 23" @changeStep="emitChangeStep(1)" />
