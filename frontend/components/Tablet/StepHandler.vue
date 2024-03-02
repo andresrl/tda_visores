@@ -17,9 +17,9 @@ const name = ref("");
 const companyName = ref("");
 const email = ref("");
 const disclaimerAcceptance = ref("");
-// const nfcContent = ref("");
+const nfcContent = ref("");
 const nfcStatus = ref("");
-// const nfcLog = ref("");
+const nfcLog = ref("");
 const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
@@ -189,6 +189,7 @@ const scanNFCStep2Click = async () => {
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   console.log("CHANGE DETECTED 1");
+  nfcLog.value = ("CHANGE DETECTED 1");
   nfcLog2.value = ("NewVal: " +  newVal);
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
@@ -228,11 +229,11 @@ const resetTablet = () => {
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
     <div id="output" class="output">
-      <!-- <div id="content">{{ nfcContent }}</div> -->
-      <!-- <div id="status">{{ nfcStatus }}</div> -->
-      <!-- <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre> -->
-      <!-- <pre id="log">{{ nfcLog }}</pre> -->
-      <!-- <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre> -->
+      <div id="content">{{ nfcContent }}</div>
+      <div id="status">{{ nfcStatus }}</div>
+      <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
+      <pre id="log" style="color: #00ff00">{{ nfcLog }}</pre>
+      <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
     </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
