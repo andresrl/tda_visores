@@ -201,7 +201,7 @@ watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
     nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
-    emitChangeStep(3);
+    // emitChangeStep(3);
   }
 });
 
@@ -291,6 +291,7 @@ const resetTablet = () => {
               <div class="or">Or</div>
               <div class="btn" @click="emitChangeStep(3)">Continue</div>
             </div>
+            <pre id="log" style="color: #ffffff">{{ nfcLog2 }}</pre>
           </div>
         </div>
       </div>
