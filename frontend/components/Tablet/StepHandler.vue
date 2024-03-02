@@ -19,6 +19,7 @@ const email = ref("");
 const disclaimerAcceptance = ref("");
 const nfcContent = ref("");
 const nfcStatus = ref("Web NFC is not available. Use Chrome on Android.");
+const nfcLog0 = ref("");
 const nfcLog = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
@@ -155,9 +156,10 @@ if (process.client) {
 const readNFCTag = async () => {
   console.log("readNFCTag")
     try {
+      nfcLog0.value = "TRY";
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog3.value = "> Scan started";
+      nfcLog2.value = "> Scan started";
       // log("> Scan started");
 
       ndef.addEventListener("readingerror", () => {
@@ -206,9 +208,10 @@ const resetTablet = () => {
     <div id="output" class="output">
       <div id="content">{{ nfcContent }}</div>
       <div id="status">{{ nfcStatus }}</div>
+      <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
       <pre id="log">{{ nfcLog }}</pre>
-      <pre id="log" style="color: #ff0000">{{ nfcLog2 }}</pre>
-      <pre id="log" style="color: #00ff00">{{ nfcLog3 }}</pre>
+      <pre id="log" style="color: #00f000">{{ nfcLog2 }}</pre>
+      <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
     </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
