@@ -18,7 +18,7 @@ const companyName = ref("");
 const email = ref("");
 const disclaimerAcceptance = ref("");
 const nfcContent = ref("");
-const nfcStatus = ref("Web NFC is not available. Use Chrome on Android.");
+const nfcStatus = ref("");
 const nfcLog0 = ref("");
 const nfcLog = ref("");
 const nfcLog2 = ref("");
@@ -154,10 +154,11 @@ if (process.client) {
 
 }
 
-const readNFCTag = async () => {
+const scanNFCclicked = async () => {
+// scanButton.addEventListener("click", async () => {
+  nfcLog0.value = "User Clicked Button";
   console.log("readNFCTag")
     try {
-      nfcLog0.value = "TRY";
       const ndef = new NDEFReader();
       await ndef.scan();
       nfcLog2.value = "> Scan started";
@@ -180,10 +181,10 @@ const readNFCTag = async () => {
 }
 
 
-if(props.step === 1) {
-  // readNFCTagSimulated();
-  readNFCTag();
-}
+// if(props.step === 1) {
+//   // readNFCTagSimulated();
+//   readNFCTag();
+// }
 
 
 onBeforeUnmount(() => {
@@ -205,6 +206,7 @@ const resetTablet = () => {
 </script>
 
 <template>
+  <button @click="scanNFCclicked">Scan</button>
   <h3>Live Output</h3>
     <div id="output" class="output">
       <div id="content">{{ nfcContent }}</div>
