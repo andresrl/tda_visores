@@ -207,6 +207,7 @@ const resetTablet = () => {
 
 watch(() => nfcSerialNumber, (newVal, oldVal) => {
   if (newVal !== "") {
+    nfcSerialNumber.value = newVal.replace(/:/g, "");
     nfcLog2.value = `> Serial Number: newVal}`
     emitChangeStep(2)
   }
