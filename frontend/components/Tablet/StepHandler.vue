@@ -24,11 +24,15 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSerialNumberSimulate = ref(true);
-const nfcSerialNumber = ref("");
+const nfcSimulate = ref(false);
+const nfcSerialNumberExhibitor = ref("");
+const nfcSerialNumberProfessional = ref("");
 const nfcSerialNumberTest1 = ref("3e:56:38:3c");
 const nfcSerialNumberTest2 = ref("8e:38:40:3c");
 // const remaingTimeText = ref("25:00");
+
+const dataExhibitor = ref({});
+const dataProfessional = ref({});
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits(["changeStep"]);
@@ -38,6 +42,29 @@ function emitChangeStep(step) {
   emit("changeStep", step);
 }
 
+const startMeeting = () => {
+  if (name.value === "") {
+    alert("Please enter your name");
+    return;
+  }
+  if (companyName.value === "") {
+    alert("Please enter your company name");
+    return;
+  }
+  if (email.value === "") {
+    alert("Please enter your email");
+    return;
+  }
+  if (companyType.value === "default") {
+    alert("Please select a company type");
+    return;
+  }
+  if (!disclaimerAcceptance.value) {
+    alert("Please accept the disclaimer");
+    return;
+  }
+  emitChangeStep(5);
+};
 
 /////////////////////////////////
 /////////////////////////////////
@@ -129,35 +156,52 @@ if (process.client) {
 const scanNFCStep1Click = async () => {
 // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
-  if(!nfcSerialNumberSimulate.value) {
-    nfcSerialNumber.value = nfcSerialNumberTest1.value;
+  if(nfcSimulate.value) {
+    nfcSerialNumberExhibitor.value = nfcSerialNumberTest1.value;
   }
   else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
       nfcLog2.value = "> Scan started";
-  
-      ndef.addEventListener("readingerror", () => {
-        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
-      });
-  
-      ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        nfcLog2.value = `> Serial Number: ${serialNumber}`
-        nfcSerialNumber.value = serialNumber;
-      });
+    } catch (error) {
+      nfcLog3.value = "Argh! " + error
+    }
+  }
+}
+const scanNFCStep2Click = async () => {
+  console.log("SCAN NFC STEP 2 CLICKED");
+// scanButton.addEventListener("click", async () => {
+  nfcLog0.value = "User Clicked Button";
+  if(nfcSimulate.value) {
+    nfcSerialNumberProfessional.value = nfcSerialNumberTest2.value;
+  }
+  else {
+    try {
+      const ndef = new NDEFReader();
+      await ndef.scan();
+      nfcLog2.value = "> Scan started";
     } catch (error) {
       nfcLog3.value = "Argh! " + error
     }
   }
 }
 
-watch(nfcSerialNumber, (newVal, oldVal) => {
-  console.log("CHANGE DETECTED");
+watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
+  console.log("CHANGE DETECTED 1");
   if (newVal !== "") {
-    nfcSerialNumber.value = newVal.replace(/:/g, "");
-    nfcLog2.value = `> Serial Number: ${nfcSerialNumber.value}`;
+    nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
     emitChangeStep(2);
+  }
+});
+
+watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
+  console.log("CHANGE DETECTED 2");
+  if (newVal !== "") {
+    nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
+    emitChangeStep(3);
   }
 });
 
@@ -172,6 +216,8 @@ const resetTablet = () => {
   companyName.value = '';
   disclaimerAcceptance.value = '';
   email.value = '';
+  nfcSerialNumberExhibitor.value = '';
+  nfcSerialNumberProfessional.value = '';
 };
 
 
@@ -206,8 +252,8 @@ const resetTablet = () => {
               <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
                 <div class="btn" @click="scanNFCStep1Click">Press to Scan Bracelet</div>
-                <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div>
-                <pre id="log" style="color: #ffffff">NFC Status: {{ nfcLog2 }}</pre>
+                  <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div>
+                  <pre id="log" style="color: #ffffff">NFC Status: {{ nfcLog2 }}</pre> -->
             </div>
             </div>
           </div>
@@ -219,7 +265,7 @@ const resetTablet = () => {
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
       <div style="color: #fff;">
-        nfcSerialNumber: {{ nfcSerialNumber }}
+        nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}
       </div>
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
@@ -233,11 +279,12 @@ const resetTablet = () => {
           </div>
           <div class="scan-subtitle">
             <div class="scanIcon">
-              <img src="/img/tablet/mano-tablet-verde@2x.png" alt="">
+              <img src="/img/tablet/mano-tablet-verde@2x.png" style="cursor: pointer;" @click="scanNFCStep2Click" alt="">
             </div>
             <div class="text">
               <div class="subtitle">
-                SCAN PROFESSIONAL BRACELET
+                <!-- SCAN PROFESSIONAL BRACELET -->
+                <div class="btnScan" @click="scanNFCStep2Click" style="color: #fff; cursor: pointer;">Press to Scan Bracelet</div>
               </div>
             </div>
             <div class="cta">
@@ -249,23 +296,42 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 3" :step="step">
+      <div style="color: #fff;">
+        nfcSerialNumberProfessional: {{ nfcSerialNumberProfessional }}
+      </div>
       <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="4" ctaText="Exit Table" tableText="false" @changeStep="emitChangeStep(1)" />
       <div class="step3Wrapper">
         <div class="frame">
           <div class="form">
             <input type="text" v-model="name" name="name" id="name" placeholder="Name" class="name">
             <input type="text" v-model="companyName" name="companyName" id="companyName" placeholder="Company Name" class="companyName">
-            <select v-model="companyType" name="companyType" id="companyType" class="companyType">
+            <!-- <select v-model="companyType" name="companyType" id="companyType" class="companyType">
               <option value="default" disabled selected>Company Type</option>
               <option value="Company Type 1">Company Type 1</option>
               <option value="Company Type 2">Company Type 2</option>
+            </select> -->
+            <!-- <select class="form-select rounded-0 bg-dark" id="company_type_id" autocomplete="off" wire:model.defer="company_type_id" required="" style="--bs-bg-opacity: .5;"> -->
+              <select v-model="companyType" name="companyType" id="companyType" class="companyType">
+                <option value="default" disabled selected>Choose an option</option>
+                <option value="1">Complementary offer</option>
+                <option value="2">Experiences</option>
+                <option value="3">Incentives / DMC</option>
+                <option value="4">Promotion entity</option>
+                <option value="5">Tourist accomodation</option>
+                <option value="6">Travel agency / Tour operator</option>
+                <option value="7">Food services</option>
+                <option value="8">Catering</option>
+                <option value="9">Travel agency / Tour operator</option>
+                <option value="10">Events</option>
+                <option value="11">Transportation</option>
+                <option value="12">Others</option>
             </select>
             <input type="text" v-model="email" name="email" id="email" placeholder="Email" class="email">
             <div class="disclaimerAcceptance">
               <input v-model="disclaimerAcceptance" type="checkbox" id="disclaimer" class="checkbox">
               <label for="disclaimer" class="label"></label>
               <div class="realLabel" @click="emitChangeStep(4)">Disclaimer Acceptance</div>
-              <div class="btn" @click="emitChangeStep(5)">Start Meeting</div>
+              <div class="btn" @click="startMeeting()">Start Meeting</div>
             </div>
           </div>
         </div>
@@ -506,6 +572,11 @@ $naranja: #e2973b;
   
   }
 
+  .btnScan {
+    @media (min-width: 801px) {
+      margin-right: 40px;
+    }
+  }
   .cta {
     text-align: center;
     color: #000;
