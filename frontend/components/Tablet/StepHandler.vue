@@ -189,10 +189,11 @@ const scanNFCStep2Click = async () => {
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   console.log("CHANGE DETECTED 1");
+  nfcLog2.value = ("NewVal: " +  newVal);
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
-    emitChangeStep(2);
+    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+    // emitChangeStep(2);
   }
 });
 
