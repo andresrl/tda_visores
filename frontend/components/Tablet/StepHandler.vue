@@ -20,6 +20,8 @@ const disclaimerAcceptance = ref("");
 const nfcContent = ref("");
 const nfcStatus = ref("Web NFC is not available. Use Chrome on Android.");
 const nfcLog = ref("");
+const nfcLog2 = ref("");
+const nfcLog3 = ref("");
 // const remaingTimeText = ref("25:00");
 
 // Define los eventos que el componente puede emitir
@@ -134,19 +136,19 @@ if (process.client) {
 
 
   const readNFCTagSimulated = async () => {
-    nfcLog.value = "> Scan started<br> `> Serial Number: 1234567890`";
+    nfcLog2.value = "> Scan started<br> `> Serial Number: 1234567890`";
     // log("> Scan started");
 
     // log(`> Serial Number: 1234567890`);
     // log(`> Records: (1)`);
   }   
 
-  const readNFInterval = setInterval(() => {
-      // readNFCTagSimulated();
-      readNFCTag()
-    }, 1000);
+  // const readNFInterval = setInterval(() => {
+  //     // readNFCTagSimulated();
+  //     readNFCTag()
+  //   }, 1000);
 
-  readNFInterval;
+  // readNFInterval;
 
 }
 
@@ -155,26 +157,30 @@ const readNFCTag = async () => {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog.value = "> Scan started";
+      nfcLog3.value = "> Scan started";
       // log("> Scan started");
 
       ndef.addEventListener("readingerror", () => {
-        nfcLog.value = "Argh! Cannot read data from the NFC tag. Try another one?";
+        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
         // log("Argh! Cannot read data from the NFC tag. Try another one?");
       });
 
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        nfcLog.value = `> Serial Number: ${serialNumber}`
+        nfcLog2.value = `> Serial Number: ${serialNumber}`
         // log(`> Serial Number: ${serialNumber}`);
         // log(`> Records: (${message.records.length})`);
       });
     } catch (error) {
-      nfcLog.value = "Argh! " + error
+      nfcLog3.value = "Argh! " + error
       // log("Argh! " + error);
     }
 }
 
 
+if(props.step === 1) {
+  // readNFCTagSimulated();
+  readNFCTag();
+}
 
 
 onBeforeUnmount(() => {
@@ -201,6 +207,8 @@ const resetTablet = () => {
       <div id="content">{{ nfcContent }}</div>
       <div id="status">{{ nfcStatus }}</div>
       <pre id="log">{{ nfcLog }}</pre>
+      <pre id="log" style="color: #ff0000">{{ nfcLog2 }}</pre>
+      <pre id="log" style="color: #00ff00">{{ nfcLog3 }}</pre>
     </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
