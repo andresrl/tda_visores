@@ -188,6 +188,13 @@ const scanNFCStep2Click = async () => {
       const ndef = new NDEFReader();
       await ndef.scan();
       nfcLog2.value = "> Scan started";
+      ndef.addEventListener("readingerror", () => {
+        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
+      });
+      ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        nfcLog2.value = `> Serial Number: ${serialNumber}`
+        nfcSerialNumberProfessional.value = serialNumber;
+      });
     } catch (error) {
       nfcLog3.value = "Argh! " + error
     }
@@ -200,8 +207,8 @@ watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   nfcLog2.value = ("NewVal: " +  newVal);
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
-    // emitChangeStep(2);
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+    emitChangeStep(2);
   }
 });
 
@@ -210,7 +217,7 @@ watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
     nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
-    // emitChangeStep(3);
+    emitChangeStep(3);
   }
 });
 
