@@ -23,6 +23,8 @@ const nfcLog0 = ref("");
 const nfcLog = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
+
+const nfcSerialNumber = ref("");
 // const remaingTimeText = ref("25:00");
 
 // Define los eventos que el componente puede emitir
@@ -206,15 +208,14 @@ const resetTablet = () => {
 </script>
 
 <template>
-  <button @click="scanNFCclicked">Scan</button>
-  <h3>Live Output</h3>
+  <!-- <button @click="scanNFCclicked"> Scan</button> -->
+  <!-- <h3>Live Output</h3> -->
     <div id="output" class="output">
-      <div id="content">{{ nfcContent }}</div>
-      <div id="status">{{ nfcStatus }}</div>
-      <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
-      <pre id="log">{{ nfcLog }}</pre>
-      <pre id="log" style="color: #00f000">{{ nfcLog2 }}</pre>
-      <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
+      <!-- <div id="content">{{ nfcContent }}</div> -->
+      <!-- <div id="status">{{ nfcStatus }}</div> -->
+      <!-- <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre> -->
+      <!-- <pre id="log">{{ nfcLog }}</pre> -->
+      <!-- <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre> -->
     </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
@@ -233,10 +234,14 @@ const resetTablet = () => {
             <div class="text">
               <div class="subtitle">SCAN TO RESERVE</div>
               <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
+              <div class="cta">
+                <div class="btn" @click="scanNFCclicked">Press to Scan Bracelet</div>
+                <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div>
+                <pre id="log" style="color: #ffffff">NFC Status: {{ nfcLog2 }}</pre>
+            </div>
             </div>
           </div>
-          <div class="cta">
-            <div class="btn" @click="emitChangeStep(2)">Simular escaneo</div>
+          <div class="nfcText">
           </div>
         
         </div>
@@ -258,7 +263,9 @@ const resetTablet = () => {
               <img src="/img/tablet/mano-tablet-verde@2x.png" alt="">
             </div>
             <div class="text">
-              <div class="subtitle">SCAN PROFESSIONAL BRACELET</div>
+              <div class="subtitle">
+                SCAN PROFESSIONAL BRACELET
+              </div>
             </div>
             <div class="cta">
               <div class="or">Or</div>
@@ -417,6 +424,7 @@ $naranja: #e2973b;
       color: #fff;
       text-transform: uppercase;
       margin-bottom: 60px;
+      text-align: left;
       .subtitle {
         font-size: 55px;
         text-align: center;
@@ -436,17 +444,19 @@ $naranja: #e2973b;
   
   }
   .cta {
-    position: relative;
-    display: flex;
-    justify-content: center;
+    // position: relative;
+    // display: flex;
+    // justify-content: center;
     // width: 30%;
-    margin: 0 auto;
+    // margin: 0 auto;
     // margin-top: 80px;
     .btn {
-      position: absolute;
-      bottom: 20px;
-      right: 150px;
+      font-family: 'Barlow-SemiBoldItalic', sans-serif;
+      // position: absolute;
+      // bottom: 20px;
+      // right: 150px;
       background-color: #fff;
+      color: $verde;
       scale: .7;
     }
   }
