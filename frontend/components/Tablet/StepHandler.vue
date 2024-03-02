@@ -17,6 +17,9 @@ const name = ref("");
 const companyName = ref("");
 const email = ref("");
 const disclaimerAcceptance = ref("");
+const nfcContent = ref("");
+const nfcStatus = ref("Web NFC is not available. Use Chrome on Android.");
+const nfcLog = ref("");
 // const remaingTimeText = ref("25:00");
 
 // Define los eventos que el componente puede emitir
@@ -87,6 +90,14 @@ const updateRemainingTime = () => {
 
   remaingTimeText.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
+/////////////////////////////////
+/////////////////////////////////
+// FIN DE
+// Cálculo del Tiempo restante
+/////////////////////////////////
+/////////////////////////////////
+
+
 
 let interval;
 
@@ -96,6 +107,75 @@ onMounted(() => {
     interval = setInterval(updateRemainingTime, 1000); // Comenzar la cuenta regresiva
   }
 });
+
+/////////////////////////////////
+// Comienzo tratamiento de NFC
+/////////////////////////////////
+/////////////////////////////////
+if (process.client) {
+  if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)){
+    // Let's log a warning if the sample is not supposed to execute on this
+    // version of Chrome.
+    if (89 > parseInt(RegExp.$1)) {
+      nfcStatus.value = 'Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.';
+      // ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
+    }
+  }
+
+  // const log = ChromeSamples.log;
+
+  if (!("NDEFReader" in window)) {
+    // ChromeSamples.setStatus("Web NFC is not available. Use Chrome on Android.");
+    nfcStatus.value = 'Web NFC is not available. Use Chrome on Android.';
+  }
+
+  // scanButton.addEventListener("click", async () => {
+  //   log("User clicked scan button");
+
+
+  const readNFCTagSimulated = async () => {
+    nfcLog.value = "> Scan started<br> `> Serial Number: 1234567890`";
+    // log("> Scan started");
+
+    // log(`> Serial Number: 1234567890`);
+    // log(`> Records: (1)`);
+  }   
+
+  const readNFInterval = setInterval(() => {
+      // readNFCTagSimulated();
+      readNFCTag()
+    }, 1000);
+
+  readNFInterval;
+
+}
+
+const readNFCTag = async () => {
+  console.log("readNFCTag")
+    try {
+      const ndef = new NDEFReader();
+      await ndef.scan();
+      nfcLog.value = "> Scan started";
+      // log("> Scan started");
+
+      ndef.addEventListener("readingerror", () => {
+        nfcLog.value = "Argh! Cannot read data from the NFC tag. Try another one?";
+        // log("Argh! Cannot read data from the NFC tag. Try another one?");
+      });
+
+      ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        nfcLog.value = `> Serial Number: ${serialNumber}`
+        // log(`> Serial Number: ${serialNumber}`);
+        // log(`> Records: (${message.records.length})`);
+      });
+    } catch (error) {
+      nfcLog.value = "Argh! " + error
+      // log("Argh! " + error);
+    }
+}
+
+
+
 
 onBeforeUnmount(() => {
   // Limpiar el intervalo cuando el componente se desmonte
@@ -111,20 +191,17 @@ const resetTablet = () => {
   email.value = '';
 };
 
-/////////////////////////////////
-/////////////////////////////////
-// FIN DE
-// Cálculo del Tiempo restante
-/////////////////////////////////
-/////////////////////////////////
 
-// function handleChangeStep(newStep) {
-//   step.value = newStep;
-// }
 
 </script>
 
 <template>
+  <h3>Live Output</h3>
+    <div id="output" class="output">
+      <div id="content">{{ nfcContent }}</div>
+      <div id="status">{{ nfcStatus }}</div>
+      <pre id="log">{{ nfcLog }}</pre>
+    </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
 
