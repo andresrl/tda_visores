@@ -62,7 +62,7 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSimulate = ref(true);
+const nfcSimulate = ref(false);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -140,6 +140,18 @@ const fetchProfessional = async () => {
   // console.log(dataExhibitor);
 };
 
+const postMeetingSlotBlock = async () => {
+  const { data } = await $fetch(
+    `${API_ENDPOINT}/meeting-slots-block?user_id=${dataExhibitor.value.id}&slot_id=513`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: BEARER_TOKEN,
+      },
+    });
+    console.log(data);
+};
+
 const postMeetingData = async () => {
   const body = {
     company_name: dataExhibitor.value.user.company_name,
@@ -193,6 +205,7 @@ const startMeeting = () => {
     alert("Please accept the disclaimer");
     return;
   }
+  postMeetingSlotBlock();
   postMeetingData();
   emitChangeStep(5);
 };
@@ -622,10 +635,10 @@ const resetTablet = () => {
           <div></div>
           <div class="companyDetails">
             <div class="logo">
-              <img :src="dataExhibitor.full_url_logo" alt="" />
+              <img :src="ExhibitorLogoUrl" alt="" />
             </div>
             <div class="name">
-              {{ dataExhibitor.company_trade_name }}
+              {{ ExhibitorTradeName }}
             </div>
           </div>
         </div>
