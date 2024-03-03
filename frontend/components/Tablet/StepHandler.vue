@@ -59,13 +59,13 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
-const nfcSerialNumberDecimalExhibitor = ref("3034");
-const nfcSerialNumberDecimalProfessional = ref("3034");
+// const nfcSerialNumberDecimalExhibitor = ref("3034");
+// const nfcSerialNumberDecimalProfessional = ref("3034");
 const nfcSerialNumberExhibitorTest = ref("3e:56:38:3c");
-const nfcSerialNumberPrefessionalTest = ref("8e:38:40:3c");
+const nfcSerialNumberProfessionalTest = ref("8e:38:40:3c");
 // const remaingTimeText = ref("25:00");
 
 const dataMeetingSpaces = ref([]);
@@ -103,7 +103,7 @@ const fetchExhibitorbyId = async (id) => {
 const fetchExhibitor = async () => {
   // https://andalusiancrushlink.com/api/bracelet/3034/true
   const { data } = await $fetch(
-    `${API_ENDPOINT}/bracelet/${nfcSerialNumberDecimalExhibitor.value}/true`,
+    `${API_ENDPOINT}/bracelet/${nfcSerialNumberExhibitor.value}`,
     {
       headers: {
         Authorization: BEARER_TOKEN,
@@ -116,7 +116,7 @@ const fetchExhibitor = async () => {
 const fetchProfessional = async () => {
   // https://andalusiancrushlink.com/api/bracelet/3034/true
   const { data } = await $fetch(
-    `${API_ENDPOINT}/bracelet/${nfcSerialNumberDecimalProfessional.value}/true`,
+    `${API_ENDPOINT}/bracelet/${nfcSerialNumberProfessional.value}`,
     {
       headers: {
         Authorization: BEARER_TOKEN,
@@ -320,7 +320,7 @@ const scanNFCStep2Click = async () => {
   // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
   if (nfcSimulate.value) {
-    nfcSerialNumberProfessional.value = nfcSerialNumberPrefessionalTest.value;
+    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
     nfcLog3.value = "> Scanning...";
   } else {
     try {
@@ -354,7 +354,8 @@ watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
     fetchProfessional();
-    emitChangeStep(3);
+    fetchExhibitor();
+    emitChangeStep( 3);
     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
   }
 });
@@ -384,7 +385,7 @@ const resetTablet = () => {
 <template>
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
-  <div id="output" v-if="false" class="output">
+  <div id="output" v-if="true" class="output">
     <div id="content">{{ nfcContent }}</div>
     <div id="status">{{ nfcStatus }}</div>
     <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
@@ -432,9 +433,10 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
-      <!-- <div style="color: #fff;">
-        nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}
-      </div> -->
+      <div style="color: #fff;">
+        nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
+      dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
+      </div>
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
         <Tablet_Header
@@ -462,8 +464,8 @@ const resetTablet = () => {
                 <div
                   class="btnScan"
                   @click="scanNFCStep2Click"
-                  style="color: #fff; cursor: pointer"
-                >
+                  style="color: #fff; cursor: pointer">
+
                   Press to Scan Bracelet
                 </div>
               </div>
@@ -481,6 +483,10 @@ const resetTablet = () => {
       <!-- <div style="color: #fff;">
         nfcSerialNumberProfessional: {{ nfcSerialNumberProfessional }}
       </div> -->
+      <div style="color: #fff;">
+        nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
+        dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
+      </div>
       <Tablet_Header
         :countDownCount="remaingTimeText"
         ctaGoToStep="4"
@@ -594,6 +600,10 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 5" :step="step">
+      <div style="color: #000;">
+        nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
+        dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
+      </div>
       <Tablet_Header
         :countDownCount="remaingTimeText"
         ctaGoToStep="1"
