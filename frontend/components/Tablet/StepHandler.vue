@@ -451,10 +451,10 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
-      <div style="color: #fff;">
+      <!-- <div style="color: #fff;">
         nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
       dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
-      </div>
+      </div> -->
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
         <Tablet_Header
@@ -501,10 +501,10 @@ const resetTablet = () => {
       <!-- <div style="color: #fff;">
         nfcSerialNumberProfessional: {{ nfcSerialNumberProfessional }}
       </div> -->
-      <div style="color: #fff;">
+      <!-- <div style="color: #fff;">
         nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
         dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
-      </div>
+      </div> -->
       <Tablet_Header
         :countDownCount="remaingTimeText"
         ctaGoToStep="4"
@@ -618,10 +618,10 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 5" :step="step">
-      <div style="color: #000;">
+      <!-- <div style="color: #000;">
         nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
         dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
-      </div>
+      </div> -->
       <Tablet_Header
         :countDownCount="remaingTimeText"
         ctaGoToStep="1"
