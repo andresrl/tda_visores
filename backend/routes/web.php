@@ -14,10 +14,9 @@ use App\Http\Controllers\MeetingController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return view('welcome');
 });
-
 
 
 Route::post('/meetings', [MeetingController::class, 'store']);
