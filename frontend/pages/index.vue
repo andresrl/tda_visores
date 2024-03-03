@@ -4,9 +4,9 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 
-const DELAY_SLIDER_EMOCIONES = 1 * 1000;
-const DELAY_SLIDER_TIEMPO_REAL = 5 * 1000;
-const DELAY_SLIDER_POSTS = 5 * 1000;
+const DELAY_SLIDER_EMOCIONES = 10 * 1000;
+const DELAY_SLIDER_TIEMPO_REAL = 7 * 1000;
+const DELAY_SLIDER_POSTS = 7 * 1000;
 
 const REFRESH_DATA_INTERVAL = 30 * 1000;
 
