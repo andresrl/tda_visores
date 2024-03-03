@@ -143,7 +143,7 @@ h2 {
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;
-    animation: rotateBackground 60s linear infinite;
+    animation: rotateBackground 10s linear infinite;
     top: 0;
     right: 0;
     bottom: 0;
@@ -175,7 +175,7 @@ h2 {
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;
-    animation: rotateBackground 60s linear infinite;
+    animation: rotateBackground 15s linear infinite;
     top: 0;
     right: 0;
     bottom: 0;

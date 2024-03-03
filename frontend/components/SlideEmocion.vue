@@ -229,65 +229,65 @@ footer {
     top: -4em;
     left: 20em;
     //zoom: 0.8;
-    animation-delay: 0.2s;
+    animation-delay: 1s;
   }
 
   .admiration {
     top: 6em;
     left: 10em;
     //zoom: 0.7;
-    animation-delay: 0.4s;
+    animation-delay: 2s;
   }
 
   .fervor {
     top: 18em;
     left: 12em;
     //zoom: 0.6;
-    animation-delay: 0.6s;
+    animation-delay: 3s;
   }
 
   .tenderness {
     top: 20em;
     left: 28em;
     //zoom: 0.8;
-    animation-delay: 0.8s;
+    animation-delay: 4s;
   }
 
   .surprise {
     top: 17em;
     left: 42em;
     //zoom: 0.5;
-    animation-delay: 1s;
+    animation-delay: 5s;
   }
 
   .enthusiasm {
     top: 6em;
     left: 52em;
     //zoom: 0.8;
-    animation-delay: 1.2s;
+    animation-delay: 6s;
   }
 
   .longing {
     top: -6em;
     left: 46em;
-    animation-delay: 1.2s;
+    animation-delay: 7s;
   }
 }
 
 .animateScale {
-  transform: scale(0.5);
-  animation: scaleAA 1.2s linear infinite 0.2s;
+  transform: scale(0.85);
+  animation: scaleAA 4s linear infinite 0.4s;
 }
 
 @keyframes scaleAA {
   0% {
-    transform: scale(0.5);
+    transform: scale(0.885);
   }
   50% {
     transform: scale(1.1);
   }
   100% {
-    transform: scale(1);
+    transform: scale(0.85);
   }
 }
 </style>

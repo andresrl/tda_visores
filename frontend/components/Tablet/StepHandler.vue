@@ -62,7 +62,7 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -170,7 +170,7 @@ const postMeetingData = async () => {
     method: "POST",
     body: JSON.stringify(body),
   });
-  console.log(JSON.stringify(body));
+  alert("DATA: " + data);
   console.log(data);
 };
 
@@ -458,7 +458,7 @@ const resetTablet = () => {
           :countDownCount="remaingTimeText"
           ctaGoToStep="3"
           ctaText="false"
-          tableText="Table 23"
+          :tableText="tableText"
           @changeStep="emitChangeStep(1)"
         />
         <div class="frame">
