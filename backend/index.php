@@ -48,8 +48,18 @@
 // }
 
 
+// Permitir solicitudes de cualquier origen
+header('Access-Control-Allow-Origin: *');
+
+// Permitir métodos específicos, como GET
+header('Access-Control-Allow-Methods: GET');
+
+// Permitir encabezados específicos, si es necesario (como 'Content-Type')
+header('Access-Control-Allow-Headers: Content-Type');
+
 // Establecer el tipo de contenido a JSON
 header('Content-Type: application/json');
+
 
 // Verificar si el método de la solicitud es GET
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
