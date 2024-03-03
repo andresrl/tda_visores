@@ -11,8 +11,6 @@ const cors = require("cors"); // CORS
 const app = express();
 
 app.use(cors()); // Habilitar CORS para todas las rutas
-app.use("/fotos", express.static(path.join(__dirname, "fotos")));
-app.use("/videos", express.static(path.join(__dirname, "videos")));
 
 app.use(express.json()); // Para parsear el cuerpo de las solicitudes como JSON
 
@@ -46,32 +44,6 @@ app.get("/api/get-goli-2-data", (req, res) => {
     res.status(500).send("Error al procesar el archivo Excel");
   }
 });
-
-app.get("/api/fotos", (req, res) => {
-  const fotosDir = path.join(__dirname, "/fotos");
-  fs.readdir(fotosDir, (err, files) => {
-    if (err) {
-      res.status(500).send("Error al leer la carpeta de fotos");
-      return;
-    }
-    const jpgFiles = files.filter((file) => file.endsWith(".jpg"));
-    res.json(shuffleArray(jpgFiles)); // Envía los archivos mezclados
-  });
-});
-
-app.get("/api/videos", (req, res) => {
-  const fotosDir = path.join(__dirname, "/videos");
-  fs.readdir(fotosDir, (err, files) => {
-    if (err) {
-      res.status(500).send("Error al leer la carpeta de videos");
-      return;
-    }
-    const mp4Files = files.filter((file) => file.endsWith(".mp4"));
-    res.json(shuffleArray(mp4Files)); // Envía los archivos mezclados
-  });
-});
-
-
 
 //Conexión a bases de datos en Node.js
 const mysql = require('mysql');
@@ -113,42 +85,42 @@ app.post("/api/save-meeting", (req, res) => {
   });
 });
 
-
+const fs = require('fs');
+const path = require('path');
 
 app.post("/api/save-meeting-json", (req, res) => {
-  // Extraer los datos del cuerpo de la solicitud
   const { company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector } = req.body;
 
-  // Definir la ruta del archivo JSON donde se guardarán los datos
   const filePath = path.join(__dirname, 'meetings.json');
 
-  // Leer el archivo JSON actual
-  fs.readFile(filePath, (err, data) => {
+  fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
       console.error('Error al leer el archivo: ', err);
-      res.status(500).send('Error al leer los datos existentes');
-      return;
+      return res.status(500).json({ status: 'error', message: 'Error al leer los datos existentes' });
     }
 
-    // Parsear los datos existentes o iniciar un nuevo array si el archivo está vacío
-    const meetings = data.length ? JSON.parse(data) : [];
+    let meetings;
+    try {
+      meetings = data.length ? JSON.parse(data) : [];
+    } catch (parseError) {
+      console.error('Error al parsear el archivo JSON: ', parseError);
+      return res.status(500).json({ status: 'error', message: 'Error al parsear los datos existentes' });
+    }
 
-    // Añadir la nueva reunión al array
     meetings.push({ company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector });
 
-    // Escribir de nuevo el array actualizado en el archivo JSON
-    fs.writeFile(filePath, JSON.stringify(meetings, null, 2), (err) => {
-      if (err) {
-        console.error('Error al escribir en el archivo: ', err);
-        res.status(500).send('Error al guardar los datos');
-        return;
+    fs.writeFile(filePath, JSON.stringify(meetings, null, 2), (writeErr) => {
+      if (writeErr) {
+        console.error('Error al escribir en el archivo: ', writeErr);
+        return res.status(500).json({ status: 'error', message: 'Error al guardar los datos' });
       }
 
       console.log('Datos insertados con éxito');
-      res.send('Datos insertados con éxito');
+      res.json({ status: 'success', message: 'Datos insertados con éxito' });
     });
   });
 });
+
 
 app.get("/api/get-meetings", (req, res) => {
   // Extraer los datos de la URL
