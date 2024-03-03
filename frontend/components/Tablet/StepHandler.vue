@@ -170,6 +170,7 @@ const postMeetingData = async () => {
     method: "POST",
     body: JSON.stringify(body),
   });
+  console.log(JSON.stringify(body));
   console.log(data);
 };
 
