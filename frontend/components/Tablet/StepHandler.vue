@@ -47,6 +47,9 @@ const tableText = computed(() => {
 });
 
 
+const ExhibitorTradeName = ref("");
+const ExhibitorLogoUrl = ref("");
+
 const professionalCompanyType = ref("default");
 const professionalName = ref("");
 const professionalCompanyName = ref("");
@@ -111,6 +114,8 @@ const fetchExhibitor = async () => {
     }
   );
   dataExhibitor.value = data.user;
+  ExhibitorTradeName.value = dataExhibitor.value.company_trade_name;
+  ExhibitorLogoUrl.value = dataExhibitor.value.full_url_logo;
 };
 
 const fetchProfessional = async () => {
