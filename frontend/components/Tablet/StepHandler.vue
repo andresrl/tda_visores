@@ -372,7 +372,6 @@ watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
     fetchProfessional();
-    fetchExhibitor();
     emitChangeStep( 3);
     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
   }
