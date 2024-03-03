@@ -166,12 +166,8 @@ const postMeetingData = async () => {
     professional_sector: professionalCompanyType.value,
   };
 
-  const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting`, {
+  const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting-json`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: BEARER_TOKEN,
-    },
     body: JSON.stringify(body),
   });
   console.log(data);

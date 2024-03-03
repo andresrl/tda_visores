@@ -13,6 +13,9 @@ goli-2.xlsx
 # Node dependencies
 node_modules
 
+#Reuniones en Node Express
+meetings.json
+
 # Logs
 logs
 *.log*

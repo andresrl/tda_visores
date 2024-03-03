@@ -113,6 +113,43 @@ app.post("/api/save-meeting", (req, res) => {
   });
 });
 
+
+
+app.post("/api/save-meeting-json", (req, res) => {
+  // Extraer los datos del cuerpo de la solicitud
+  const { company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector } = req.body;
+
+  // Definir la ruta del archivo JSON donde se guardarán los datos
+  const filePath = path.join(__dirname, 'meetings.json');
+
+  // Leer el archivo JSON actual
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error('Error al leer el archivo: ', err);
+      res.status(500).send('Error al leer los datos existentes');
+      return;
+    }
+
+    // Parsear los datos existentes o iniciar un nuevo array si el archivo está vacío
+    const meetings = data.length ? JSON.parse(data) : [];
+
+    // Añadir la nueva reunión al array
+    meetings.push({ company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector });
+
+    // Escribir de nuevo el array actualizado en el archivo JSON
+    fs.writeFile(filePath, JSON.stringify(meetings, null, 2), (err) => {
+      if (err) {
+        console.error('Error al escribir en el archivo: ', err);
+        res.status(500).send('Error al guardar los datos');
+        return;
+      }
+
+      console.log('Datos insertados con éxito');
+      res.send('Datos insertados con éxito');
+    });
+  });
+});
+
 app.get("/api/get-meetings", (req, res) => {
   // Extraer los datos de la URL
   const { company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector } = req.query;
