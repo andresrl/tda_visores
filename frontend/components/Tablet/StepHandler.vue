@@ -62,7 +62,7 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -167,26 +167,26 @@ const postMeetingData = async () => {
   };
 
   // const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting-json`, {
-  // const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/`, {
-  //   method: "POST",
-  //   body: JSON.stringify(body),
-  // });
-
-
-  const params = new URLSearchParams({
-    company_name: body.company_name,
-    company_tradename: body.company_tradename,
-    company_username: body.company_username,
-    company_email: body.company_email,
-    professional_fullname: body.professional_fullname,
-    professional_company: body.professional_company,
-    professional_email: body.professional_email,
-    professional_sector: body.professional_sector
-  }).toString();
-
-  const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/?${params}`, {
-    method: "GET"
+  const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/`, {
+    method: "POST",
+    body: JSON.stringify(body),
   });
+
+
+  // const params = new URLSearchParams({
+  //   company_name: body.company_name,
+  //   company_tradename: body.company_tradename,
+  //   company_username: body.company_username,
+  //   company_email: body.company_email,
+  //   professional_fullname: body.professional_fullname,
+  //   professional_company: body.professional_company,
+  //   professional_email: body.professional_email,
+  //   professional_sector: body.professional_sector
+  // }).toString();
+
+  // const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/?${params}`, {
+  //   method: "GET"
+  // });
 
   alert("DATA: " + data);
   console.log(data);
