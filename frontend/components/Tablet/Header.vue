@@ -24,8 +24,9 @@ const emit = defineEmits(["changeStep"]);
 
 // Función para emitir el evento changeStep
 function emitChangeStep() {
-  emit("changeStep", props.ctaGoToStep);
-  console.log(props.ctaGoToStep)
+  location.reload();
+  // emit("changeStep", props.ctaGoToStep);
+  // console.log(props.ctaGoToStep)
 }
 
 </script>

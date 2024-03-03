@@ -14,6 +14,8 @@ app.use(cors()); // Habilitar CORS para todas las rutas
 app.use("/fotos", express.static(path.join(__dirname, "fotos")));
 app.use("/videos", express.static(path.join(__dirname, "videos")));
 
+app.use(express.json()); // Para parsear el cuerpo de las solicitudes como JSON
+
 app.get("/api/ping", (req, res) => {
   const data = true;
   res.json(data);
@@ -69,76 +71,68 @@ app.get("/api/videos", (req, res) => {
   });
 });
 
-// Configurar almacenamiento de Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.mimetype.startsWith("image")) {
-      cb(null, "fotos/");
-    } else if (file.mimetype.startsWith("video")) {
-      cb(null, "videos/");
-    } else {
-      cb({ error: "Tipo de archivo no soportado" }, false);
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname),
-    );
-  },
+
+
+//Conexión a bases de datos en Node.js
+const mysql = require('mysql');
+
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'abb_and_info_db1',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD|| 'root',
 });
 
-const upload = multer({ storage: storage });
-
-// Rutas para cargar imágenes y videos
-// app.post('/api/fotos', upload.array('images'), async (req, res) => {
-//   try {
-//     req.files.forEach(async (file) => {
-//       await sharp(file.path)
-//         .resize(800) // Cambiar según la necesidad
-//         .jpeg({ quality: 80 })
-//         .toFile(path.join('fotos/', 'optimized-' + file.filename));
-//     });
-//     res.send('Imágenes cargadas y procesadas');
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
-// app.post('/api/videos', upload.array('videos'), (req, res) => {
-//   // Aquí podrías agregar procesamiento de videos si es necesario
-//   res.send('Videos cargados');
-// });
-
-// app.get('/api/images', (req, res) => {
-//   const fotosDir = path.join(__dirname, '/fotos');
-//   fs.readdir(fotosDir, (err, files) => {
-//     if (err) {
-//       res.status(500).send('Error al leer el directorio de imágenes');
-//     } else {
-//       res.json(files);
-//     }
-//   });
-// });
-
-// app.get('/api/videos', (req, res) => {
-//   const videosDir = path.join(__dirname, '/videos');
-//   fs.readdir(videosDir, (err, files) => {
-//     if (err) {
-//       res.status(500).send('Error al leer el directorio de videos');
-//     } else {
-//       res.json(files);
-//     }
-//   });
-// });
-
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+//Conexión a bases de datos en Node.js
+connection.connect((err) => {
+  if (err) {
+    console.error('Error de conexión: ', err.stack);
+    return;
   }
-  return array;
-}
+  console.log('¡Conexión exitosa a la base de datos MySQL!');
+});
+
+
+app.post("/api/save-meeting", (req, res) => {
+  // Extraer los datos del cuerpo de la solicitud
+  const { company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector } = req.body;
+
+  // Definir la consulta SQL utilizando parámetros para evitar inyecciones SQL
+  const consultaSQL = 'INSERT INTO meetings (company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+  // Ejecutar la consulta SQL con los datos recibidos
+  connection.query(consultaSQL, [company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector], (err, resultados) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta INSERT: ', err.stack);
+      res.status(500).send('Error al ejecutar la consulta');
+      return;
+    }
+    console.log('Resultados de la consulta INSERT: ', resultados);
+    res.send('Datos insertados con éxito');
+  });
+});
+
+app.get("/api/get-meetings", (req, res) => {
+  // Extraer los datos de la URL
+  const { company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector } = req.query;
+
+  // Aquí puedes usar estos valores para filtrar tus resultados si es necesario
+  // Por ejemplo, modificando la consultaSQL para incluir condiciones WHERE basadas en los valores recibidos
+
+  const consultaSQL = 'SELECT * FROM meetings'; // Modifica esta consulta según tus necesidades
+
+  connection.query(consultaSQL, (err, resultados) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta SELECT: ', err.stack);
+      res.status(500).send('Error al ejecutar la consulta');
+      return;
+    }
+    console.log('Resultados de la consulta SELECT: ', resultados);
+    // Aquí podrías querer enviar los resultados reales en lugar de un mensaje genérico
+    res.json(resultados);
+  });
+});
 
 const PORT = 4003;
 app.listen(PORT, () => {

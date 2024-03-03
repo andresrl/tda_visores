@@ -1,21 +1,56 @@
 <script setup>
-import { ref, watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, computed, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
+
+const runtimeConfig = useRuntimeConfig();
+
+const BEARER_TOKEN = "Bearer 5|ne4srosIMQWM3lTyAZfIH28RONnIvinPDOhu7qdWb65ac5d3";
+const API_ENDPOINT = "https://andalusiancrushlink.com/api";
 
 const props = defineProps({
   step: {
     type: Number,
     required: true,
   },
-  id: {
+  tableName: {
     type: Number,
     required: true,
   },
 });
 
-const companyType = ref("default");
-const name = ref("");
-const companyName = ref("");
-const email = ref("");
+const tableText = computed(() => {
+  // console.log("props.tableName 1", dataMeetingSpaces.value);
+  // console.log("props.tableName 2", props.tableName);
+  if(props.tableName) {
+    let table = dataMeetingSpaces.value
+      .find((item) => item.table_name ===  props.tableName.toUpperCase());
+
+    // console.log("props.tableName props.tableName.toLowerCase", props.tableName.toUpperCase());
+    // console.log("props.tableName 3", table);
+
+    // Verificar si encontramos una coincidencia
+    if (table) {
+      // Acceder a la propiedad 'table_name'
+      fetchExhibitorbyId(table.user_id);
+
+      isHot.value = (table.name === "H") ? true : false;
+
+      return `Table ${table.table_name}`;
+    } else {
+      // Manejar el caso cuando no encontramos una coincidencia
+      return "";
+      // return "Table not found";
+    }
+  }
+  else {
+    return "Table 23";
+  }
+});
+
+
+const professionalCompanyType = ref("default");
+const professionalName = ref("");
+const professionalCompanyName = ref("");
+const professionalEmail = ref("");
 const disclaimerAcceptance = ref("");
 const nfcContent = ref("");
 const nfcStatus = ref("");
@@ -27,12 +62,102 @@ const nfcLog3 = ref("");
 const nfcSimulate = ref(false);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
-const nfcSerialNumberTest1 = ref("3e:56:38:3c");
-const nfcSerialNumberTest2 = ref("8e:38:40:3c");
+const nfcSerialNumberDecimalExhibitor = ref("3034");
+const nfcSerialNumberDecimalProfessional = ref("3034");
+const nfcSerialNumberExhibitorTest = ref("3e:56:38:3c");
+const nfcSerialNumberPrefessionalTest = ref("8e:38:40:3c");
 // const remaingTimeText = ref("25:00");
 
+const dataMeetingSpaces = ref([]);
 const dataExhibitor = ref({});
 const dataProfessional = ref({});
+
+const isHot = ref(false);
+
+let interval = null;
+
+const fetchMeetingSpaces = async () => {
+  const { data } = await $fetch(`${API_ENDPOINT}/meeting-spaces`, {
+    headers: {
+      Authorization: BEARER_TOKEN,
+    },
+  });
+  dataMeetingSpaces.value = data;
+  console.log(data);
+};
+
+const fetchExhibitorbyId = async (id) => {
+  console.log("tableName changed ... ...  ");
+  const { data } = await $fetch(
+    `${API_ENDPOINT}/company/${id}`,
+    {
+      headers: {
+        Authorization: BEARER_TOKEN,
+      },
+    }
+  );
+  dataExhibitor.value = data;
+  console.log("tableName changed DATA", dataExhibitor.value);
+};
+
+const fetchExhibitor = async () => {
+  // https://andalusiancrushlink.com/api/bracelet/3034/true
+  const { data } = await $fetch(
+    `${API_ENDPOINT}/bracelet/${nfcSerialNumberDecimalExhibitor.value}/true`,
+    {
+      headers: {
+        Authorization: BEARER_TOKEN,
+      },
+    }
+  );
+  dataExhibitor.value = data.user;
+};
+
+const fetchProfessional = async () => {
+  // https://andalusiancrushlink.com/api/bracelet/3034/true
+  const { data } = await $fetch(
+    `${API_ENDPOINT}/bracelet/${nfcSerialNumberDecimalProfessional.value}/true`,
+    {
+      headers: {
+        Authorization: BEARER_TOKEN,
+      },
+    }
+  );
+
+  dataExhibitor.value = data;
+
+  professionalName.value = "NOMBREEEEE";
+  professionalName.value = dataExhibitor.value.user.name;
+  // console.log("NAMEEEE", professionalName.value);
+  professionalEmail.value = dataExhibitor.value.user.email;
+  professionalCompanyName.value = dataExhibitor.value.user.company_name;
+
+  // console.log(dataExhibitor);
+};
+
+const postMeetingData = async () => {
+  const body = {
+    company_name: dataExhibitor.value.user.company_name,
+    company_tradename: dataExhibitor.value.user.company_trade_name,
+    company_username:
+      dataExhibitor.value.user.name + " - " + dataExhibitor.value.user.surname,
+    company_email: dataExhibitor.value.user.email,
+    professional_fullname: professionalName.value,
+    professional_company: professionalCompanyName.value,
+    professional_email: professionalEmail.value,
+    professional_sector: professionalCompanyType.value,
+  };
+
+  const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: BEARER_TOKEN,
+    },
+    body: JSON.stringify(body),
+  });
+  console.log(data);
+};
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits(["changeStep"]);
@@ -43,19 +168,19 @@ function emitChangeStep(step) {
 }
 
 const startMeeting = () => {
-  if (name.value === "") {
+  if (professionalName.value === "") {
     alert("Please enter your name");
     return;
   }
-  if (companyName.value === "") {
+  if (professionalCompanyName.value === "") {
     alert("Please enter your company name");
     return;
   }
-  if (email.value === "") {
+  if (professionalEmail.value === "") {
     alert("Please enter your email");
     return;
   }
-  if (companyType.value === "default") {
+  if (professionalCompanyType.value === "default") {
     alert("Please select a company type");
     return;
   }
@@ -63,6 +188,7 @@ const startMeeting = () => {
     alert("Please accept the disclaimer");
     return;
   }
+  postMeetingData();
   emitChangeStep(5);
 };
 
@@ -73,15 +199,21 @@ const startMeeting = () => {
 /////////////////////////////////
 /////////////////////////////////
 
-
-const remaingTimeText = ref('');
+const remaingTimeText = ref("");
 
 // Función para calcular el tiempo restante hasta el próximo bloque de 30 minutos
 const calculateNextBlock = () => {
   const now = new Date();
   // Redondear hacia arriba al próximo intervalo de 30 minutos
   const nextBlockMinutes = Math.ceil(now.getMinutes() / 30) * 30;
-  const nextBlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), nextBlockMinutes, 0);
+  const nextBlock = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+    nextBlockMinutes,
+    0
+  );
 
   // Ajustar al próximo intervalo si ya estamos en él
   if (nextBlock <= now) {
@@ -100,20 +232,21 @@ const setupCountdown = () => {
   const diff = (nextBlock - now) / 1000;
   const minutes = Math.floor(diff / 60);
   const seconds = Math.floor(diff % 60);
-  remaingTimeText.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  remaingTimeText.value = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
 // Función para actualizar el texto de tiempo restante
 const updateRemainingTime = () => {
-  const parts = remaingTimeText.value.split(':');
+  const parts = remaingTimeText.value.split(":");
   let minutes = parseInt(parts[0], 10);
   let seconds = parseInt(parts[1], 10);
 
   if (seconds === 0) {
     if (minutes === 0) {
       // Reiniciar la cuenta regresiva cuando llegue a 0
-      setupCountdown();
-      resetTablet();
+      // setupCountdown();
+      // resetTablet();
+      location.reload();
       return;
     } else {
       minutes--;
@@ -123,7 +256,7 @@ const updateRemainingTime = () => {
     seconds--;
   }
 
-  remaingTimeText.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  remaingTimeText.value = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 /////////////////////////////////
 /////////////////////////////////
@@ -132,92 +265,97 @@ const updateRemainingTime = () => {
 /////////////////////////////////
 /////////////////////////////////
 
-let interval;
-
 onMounted(() => {
+  var interval;
   if (process.client) {
     setupCountdown(); // Establecer el tiempo inicial restante
     interval = setInterval(updateRemainingTime, 1000); // Comenzar la cuenta regresiva
   }
+
+  if(props.tableName !== "") {
+    console.log("tableName changed");
+    fetchMeetingSpaces();
+  }
 });
+
 
 /////////////////////////////////
 // Comienzo tratamiento de NFC
 /////////////////////////////////
 /////////////////////////////////
 if (process.client) {
-  if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)){
+  if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)) {
     if (89 > parseInt(RegExp.$1)) {
-      nfcStatus.value = 'Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.';
+      nfcStatus.value =
+        "Warning! Keep in mind this sample has been tested with Chrome " + 89 + ".";
     }
   }
 }
 
 const scanNFCStep1Click = async () => {
-// scanButton.addEventListener("click", async () => {
+  // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
-  if(nfcSimulate.value) {
-    nfcSerialNumberExhibitor.value = nfcSerialNumberTest1.value;
-  }
-  else {
+  if (nfcSimulate.value) {
+    nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
+    nfcLog2.value = "> Scanning...";
+  } else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog2.value = "> Scan started";
+      nfcLog2.value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        nfcLog2.value = `> Serial Number: ${serialNumber}`
+        // nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumberExhibitor.value = serialNumber;
       });
     } catch (error) {
-      nfcLog3.value = "Argh! " + error
+      nfcLog3.value = "Argh! " + error;
     }
   }
-}
+};
 const scanNFCStep2Click = async () => {
   console.log("SCAN NFC STEP 2 CLICKED");
-// scanButton.addEventListener("click", async () => {
+  // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
-  if(nfcSimulate.value) {
-    nfcSerialNumberProfessional.value = nfcSerialNumberTest2.value;
-  }
-  else {
+  if (nfcSimulate.value) {
+    nfcSerialNumberProfessional.value = nfcSerialNumberPrefessionalTest.value;
+    nfcLog3.value = "> Scanning...";
+  } else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog2.value = "> Scan started";
+      nfcLog3.value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        nfcLog2.value = `> Serial Number: ${serialNumber}`
+        // nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumberProfessional.value = serialNumber;
       });
     } catch (error) {
-      nfcLog3.value = "Argh! " + error
+      nfcLog3.value = "Argh! " + error;
     }
   }
-}
+};
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
-  console.log("CHANGE DETECTED 1");
-  nfcLog.value = ("CHANGE DETECTED 1");
-  nfcLog2.value = ("NewVal: " +  newVal);
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+    fetchExhibitor();
     emitChangeStep(2);
+    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   }
 });
 
 watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
-  console.log("CHANGE DETECTED 2");
+  console.log("nfcSerialNumberProfessional changed");
   if (newVal !== "") {
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
-    nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
+    fetchProfessional();
     emitChangeStep(3);
+    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
   }
 });
 
@@ -227,127 +365,191 @@ onBeforeUnmount(() => {
 
 const resetTablet = () => {
   emitChangeStep(1);
-  companyType.value = '';
-  name.value = '';
-  companyName.value = '';
-  disclaimerAcceptance.value = '';
-  email.value = '';
-  nfcSerialNumberExhibitor.value = '';
-  nfcSerialNumberProfessional.value = '';
+  companyType.value = "";
+  name.value = "";
+  companyName.value = "";
+  disclaimerAcceptance.value = "";
+  email.value = "";
+  nfcSerialNumberExhibitor.value = "";
+  nfcSerialNumberProfessional.value = "";
+  nfcLog.value = "";
+  nfcLog0.value = "";
+  nfcLog2.value = "";
+  nfcLog3.value = "";
+  dataExhibitor.value = {};
+  dataProfessional.value = {};
 };
-
-
 </script>
 
 <template>
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
-    <div id="output" class="output">
-      <div id="content">{{ nfcContent }}</div>
-      <div id="status">{{ nfcStatus }}</div>
-      <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
-      <pre id="log" style="color: #00ff00">{{ nfcLog }}</pre>
-      <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
-    </div>
+  <div id="output" v-if="false" class="output">
+    <div id="content">{{ nfcContent }}</div>
+    <div id="status">{{ nfcStatus }}</div>
+    <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
+    <pre id="log" style="color: #00ff00">{{ nfcLog }}</pre>
+    <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
+  </div>
   <div>
     <Tablet_ContentWrapper v-if="step === 1" :step="step">
-
       <div class="step1Wrapper">
-      <!-- <Tablet_Header countDownCount="false" ctaGoToStep="0" ctaText="false" /> -->
-        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="2" ctaText="false" tableText="Table 23" @changeStep="emitChangeStep(2)" />
+        <!-- <Tablet_Header countDownCount="false" ctaGoToStep="0" ctaText="false" /> -->
+        <Tablet_Header
+          :countDownCount="remaingTimeText"
+          ctaGoToStep="2"
+          ctaText="false"
+          :tableText="tableText"
+          @changeStep="emitChangeStep(2)"
+        />
         <div class="frame">
-          <div class="title">
-            AVAILABLE MEETING POINT
+          <div class="title" v-if="isHot">AVAILABLE MEETING POINT</div>
+          <div class="title company" v-else>
+            <div class="text" v-if="dataExhibitor.company_trade_name">
+              <div>{{ dataExhibitor.company_trade_name }}</div>
+              <div class="available">AVAILABLE MEETING POINT</div>
+            </div>
+            <div class="logo" v-if="dataExhibitor.full_url_logo">
+              <img :src="dataExhibitor.full_url_logo" alt="" />  
+            </div>
           </div>
           <div class="scan-subtitle">
             <div class="scanIcon">
-              <img src="/img/tablet/mano-tablet-blanco@2x.png" alt="">
+              <img src="/img/tablet/mano-tablet-blanco@2x.png" alt="" />
             </div>
             <div class="text">
               <div class="subtitle">SCAN TO RESERVE</div>
               <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
                 <div class="btn" @click="scanNFCStep1Click">Press to Scan Bracelet</div>
-                  <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div> -->
-                  <pre id="log" style="color: #ffffff">{{ nfcLog2 }}</pre>
-            </div>
+                <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div> -->
+                <div id="log" style="color: #ffffff">{{ nfcLog2 }}</div>
+              </div>
             </div>
           </div>
-          <div class="nfcText">
-          </div>
-        
+          <div class="nfcText"></div>
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 2" :step="step">
-      <div style="color: #fff;">
+      <!-- <div style="color: #fff;">
         nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}
-      </div>
+      </div> -->
       <div class="step2Wrapper">
         <!-- <Tablet_Header countDownCount="25:00" ctaGoToStep="3" ctaText="Exit Table" @changeStep="emitChangeStep(1)" /> -->
-        <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="3" ctaText="false" tableText="Table 23" @changeStep="emitChangeStep(1)" />
+        <Tablet_Header
+          :countDownCount="remaingTimeText"
+          ctaGoToStep="3"
+          ctaText="false"
+          tableText="Table 23"
+          @changeStep="emitChangeStep(1)"
+        />
         <div class="frame">
-          <div class="title">
-            MEETING STARTED
-          </div>
-          <div class="waiting">
-            WAITING FOR THE PROFESSIONAL
-          </div>
+          <div class="title">MEETING STARTED</div>
+          <div class="waiting">WAITING FOR THE PROFESSIONAL</div>
           <div class="scan-subtitle">
             <div class="scanIcon">
-              <img src="/img/tablet/mano-tablet-verde@2x.png" style="cursor: pointer;" @click="scanNFCStep2Click" alt="">
+              <img
+                src="/img/tablet/mano-tablet-verde@2x.png"
+                style="cursor: pointer"
+                @click="scanNFCStep2Click"
+                alt=""
+              />
             </div>
             <div class="text">
               <div class="subtitle">
                 <!-- SCAN PROFESSIONAL BRACELET -->
-                <div class="btnScan" @click="scanNFCStep2Click" style="color: #fff; cursor: pointer;">Press to Scan Bracelet</div>
+                <div
+                  class="btnScan"
+                  @click="scanNFCStep2Click"
+                  style="color: #fff; cursor: pointer"
+                >
+                  Press to Scan Bracelet
+                </div>
               </div>
+              <div id="log" style="color: #ffffff; text-align: left">{{ nfcLog3 }}</div>
             </div>
             <div class="cta">
               <div class="or">Or</div>
               <div class="btn" @click="emitChangeStep(3)">Continue</div>
             </div>
-            <pre id="log" style="color: #ffffff">{{ nfcLog2 }}</pre>
           </div>
         </div>
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 3" :step="step">
-      <div style="color: #fff;">
+      <!-- <div style="color: #fff;">
         nfcSerialNumberProfessional: {{ nfcSerialNumberProfessional }}
-      </div>
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="4" ctaText="Exit Table" tableText="false" @changeStep="emitChangeStep(1)" />
+      </div> -->
+      <Tablet_Header
+        :countDownCount="remaingTimeText"
+        ctaGoToStep="4"
+        ctaText="Exit Table"
+        tableText="false"
+        @changeStep="emitChangeStep(1)"
+      />
       <div class="step3Wrapper">
         <div class="frame">
           <div class="form">
-            <input type="text" v-model="name" name="name" id="name" placeholder="Name" class="name">
-            <input type="text" v-model="companyName" name="companyName" id="companyName" placeholder="Company Name" class="companyName">
-            <!-- <select v-model="companyType" name="companyType" id="companyType" class="companyType">
-              <option value="default" disabled selected>Company Type</option>
-              <option value="Company Type 1">Company Type 1</option>
-              <option value="Company Type 2">Company Type 2</option>
-            </select> -->
-            <!-- <select class="form-select rounded-0 bg-dark" id="company_type_id" autocomplete="off" wire:model.defer="company_type_id" required="" style="--bs-bg-opacity: .5;"> -->
-              <select v-model="companyType" name="companyType" id="companyType" class="companyType">
-                <option value="default" disabled selected>Choose an option</option>
-                <option value="1">Complementary offer</option>
-                <option value="2">Experiences</option>
-                <option value="3">Incentives / DMC</option>
-                <option value="4">Promotion entity</option>
-                <option value="5">Tourist accomodation</option>
-                <option value="6">Travel agency / Tour operator</option>
-                <option value="7">Food services</option>
-                <option value="8">Catering</option>
-                <option value="9">Travel agency / Tour operator</option>
-                <option value="10">Events</option>
-                <option value="11">Transportation</option>
-                <option value="12">Others</option>
+            <input
+              type="text"
+              v-model="professionalName"
+              name="name"
+              id="name"
+              placeholder="Name"
+              class="name"
+            />
+            <input
+              type="text"
+              v-model="professionalCompanyName"
+              name="companyName"
+              id="companyName"
+              placeholder="Company Name"
+              class="companyName"
+            />
+            <select
+              v-model="professionalCompanyType"
+              name="companyType"
+              id="companyType"
+              class="companyType"
+            >
+              <option value="default" disabled selected>Choose an option</option>
+              <option value="Complementary offer">Complementary offer</option>
+              <option value="Experiences">Experiences</option>
+              <option value="Incentives / DMC">Incentives / DMC</option>
+              <option value="Promotion entity">Promotion entity</option>
+              <option value="Tourist accomodation">Tourist accomodation</option>
+              <option value="Travel agency / Tour operator">
+                Travel agency / Tour operator
+              </option>
+              <option value="Food services">Food services</option>
+              <option value="Catering">Catering</option>
+              <option value="Travel agency / Tour operator">
+                Travel agency / Tour operator
+              </option>
+              <option value="Events">Events</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Others">Others</option>
             </select>
-            <input type="text" v-model="email" name="email" id="email" placeholder="Email" class="email">
+            <input
+              type="text"
+              v-model="professionalEmail"
+              name="email"
+              id="email"
+              placeholder="Email"
+              class="email"
+            />
             <div class="disclaimerAcceptance">
-              <input v-model="disclaimerAcceptance" type="checkbox" id="disclaimer" class="checkbox">
+              <input
+                v-model="disclaimerAcceptance"
+                type="checkbox"
+                id="disclaimer"
+                class="checkbox"
+              />
               <label for="disclaimer" class="label"></label>
-              <div class="realLabel" @click="emitChangeStep(4)">Disclaimer Acceptance</div>
+              <div class="realLabel" @click="emitChangeStep(4)">
+                Disclaimer Acceptance
+              </div>
               <div class="btn" @click="startMeeting()">Start Meeting</div>
             </div>
           </div>
@@ -355,16 +557,35 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 4" :step="step">
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="5" ctaText="false" @changeStep="emitChangeStep(1)" />
-      
+      <Tablet_Header
+        :countDownCount="remaingTimeText"
+        ctaGoToStep="5"
+        ctaText="false"
+        @changeStep="emitChangeStep(1)"
+      />
+
       <div class="step4Wrapper">
         <div class="frame">
           <h2>Disclaimer Acceptance</h2>
           <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+            eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor
+            sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+            fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
           </div>
           <div class="cta">
             <div class="btn" @click="emitChangeStep(3)">Back</div>
@@ -373,18 +594,23 @@ const resetTablet = () => {
       </div>
     </Tablet_ContentWrapper>
     <Tablet_ContentWrapper v-if="step === 5" :step="step">
-      <Tablet_Header :countDownCount="remaingTimeText" ctaGoToStep="1" ctaText="false" tableText="false" @changeStep="emitChangeStep(1)" />
+      <Tablet_Header
+        :countDownCount="remaingTimeText"
+        ctaGoToStep="1"
+        ctaText="false"
+        tableText="false"
+        @changeStep="emitChangeStep(1)"
+      />
       <div class="step5Wrapper">
         <div class="frame">
-          <div class="title">
-            MEETING IN COURSE
-          </div>
+          <div class="title">MEETING IN COURSE</div>
+          <div></div>
           <div class="companyDetails">
             <div class="logo">
-              <img src="https://place-hold.it/800x450" alt="">
+              <img :src="dataExhibitor.full_url_logo" alt="" />
             </div>
             <div class="name">
-              Company Name XYZ
+              {{ dataExhibitor.company_trade_name }}
             </div>
           </div>
         </div>
@@ -402,7 +628,9 @@ $verde: #00ce7e;
 $rojo: #d41c24;
 $naranja: #e2973b;
 
-.btn, input, select {
+.btn,
+input,
+select {
   box-sizing: border-box;
 }
 
@@ -413,7 +641,7 @@ $naranja: #e2973b;
   text-align: center;
   text-transform: uppercase;
   padding: 20px 40px;
-  font-family: 'Barlow-ExtraLightItalic', sans-serif;
+  font-family: "Barlow-ExtraLightItalic", sans-serif;
   background-color: $verde;
   font-size: 33px;
   &:hover {
@@ -425,7 +653,7 @@ $naranja: #e2973b;
   text-align: center;
   text-transform: uppercase;
   padding: 20px 40px;
-  font-family: 'Barlow-ExtraLightItalic', sans-serif;
+  font-family: "Barlow-ExtraLightItalic", sans-serif;
   background-color: $verde;
   font-size: 33px;
   &:hover {
@@ -439,10 +667,46 @@ $naranja: #e2973b;
     text-align: center;
     padding: 80px 30px 30px 30px;
     color: #fff;
-    font-family: 'Barlow-Black';
+    font-family: "Barlow-Black";
     line-height: 80px;
     @media (min-width: 801px) {
       font-size: 70px;
+    }
+
+    &.company {
+      padding: 40px 30px 30px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      line-height: 45px;
+      .text {
+        text-align: center;
+        font-size: 40px;
+        .available {
+          font-size: 30px;
+        }
+      }
+      .logo {
+        text-align: center;
+        img {
+          width: 200px;
+        }
+      }
+      @media (min-width: 801px) {
+        flex-direction: row;
+        .text {
+          text-align: left;
+          font-size: 50px;
+        }
+        .logo {
+        text-align: right;
+        img {
+          height: 100px;
+          width: 100px;
+          object-fit: contain;
+        }
+      }
+      }
     }
   }
   .frame {
@@ -476,7 +740,7 @@ $naranja: #e2973b;
       }
     }
     .text {
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       color: #fff;
       text-transform: uppercase;
       margin-bottom: 60px;
@@ -484,7 +748,7 @@ $naranja: #e2973b;
       .subtitle {
         font-size: 55px;
         text-align: center;
-        margin:0 0 5px;
+        margin: 0 0 5px;
         @media (min-width: 801px) {
           font-size: 60px;
         }
@@ -497,7 +761,6 @@ $naranja: #e2973b;
         }
       }
     }
-  
   }
   .cta {
     // position: relative;
@@ -507,19 +770,18 @@ $naranja: #e2973b;
     // margin: 0 auto;
     // margin-top: 80px;
     .btn {
-      font-family: 'Barlow-SemiBoldItalic', sans-serif;
+      font-family: "Barlow-SemiBoldItalic", sans-serif;
       // position: absolute;
       // bottom: 20px;
       // right: 150px;
       background-color: #fff;
       color: $verde;
-      scale: .7;
+      scale: 0.7;
     }
   }
 }
-  
-.step2Wrapper {
 
+.step2Wrapper {
   .frame {
     background-color: #000;
     border: 2px solid $verde;
@@ -534,7 +796,7 @@ $naranja: #e2973b;
     text-align: center;
     margin: 80px 30px 0px 30px;
     color: #fff;
-    font-family: 'Barlow-Black';
+    font-family: "Barlow-Black";
     line-height: 80px;
     @media (min-width: 801px) {
       font-size: 70px;
@@ -544,7 +806,7 @@ $naranja: #e2973b;
     font-size: 50px;
     text-align: center;
     color: $verde;
-    font-family: 'Barlow-Light';
+    font-family: "Barlow-Light";
     line-height: 55px;
   }
   .scan-subtitle {
@@ -569,14 +831,14 @@ $naranja: #e2973b;
       }
     }
     .text {
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       color: $verde;
       text-transform: uppercase;
       .subtitle {
         font-size: 40px;
         line-height: 45px;
         text-align: center;
-        margin:0 0 5px;
+        margin: 0 0 5px;
       }
       @media (min-width: 801px) {
         width: 30%;
@@ -586,7 +848,6 @@ $naranja: #e2973b;
         }
       }
     }
-  
   }
 
   .btnScan {
@@ -602,18 +863,18 @@ $naranja: #e2973b;
     // margin: 0 auto;
     justify-content: center;
     align-items: center;
-    font-family: 'Barlow-ExtraLightItalic', sans-serif;
+    font-family: "Barlow-ExtraLightItalic", sans-serif;
     // font-size: 70px;
     color: #fff;
     .btn {
       // width: 70%;
     }
     .or {
-        font-size: 30px;
-        color: $verde;
-        text-transform: uppercase;
-        margin: 40px 0;
-      }
+      font-size: 30px;
+      color: $verde;
+      text-transform: uppercase;
+      margin: 40px 0;
+    }
     @media (min-width: 801px) {
       flex-direction: row;
       align-items: center;
@@ -653,7 +914,7 @@ $naranja: #e2973b;
     input {
       text-transform: uppercase;
       text-align: center;
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       padding: 20px 40px;
       width: 80%;
       margin-bottom: 40px;
@@ -662,7 +923,7 @@ $naranja: #e2973b;
       color: $verde;
       &::placeholder {
         color: $verde;
-      } 
+      }
     }
     .companyType {
       border: 3px solid $verde;
@@ -671,7 +932,7 @@ $naranja: #e2973b;
       text-align: center;
       padding: 20px 40px;
       width: 80%;
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       font-size: 33px;
       text-transform: uppercase;
       margin-bottom: 40px;
@@ -680,7 +941,7 @@ $naranja: #e2973b;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       font-size: 33px;
       text-transform: uppercase;
       flex-wrap: wrap;
@@ -725,13 +986,12 @@ $naranja: #e2973b;
       transform: scale(1); /* Muestra la marca de verificación cuando esté seleccionado */
     }
     @media (min-width: 801px) {
-
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
       width: 80%;
       margin: 0 auto;
-      
+
       margin-top: 80px;
       input {
         width: 47%;
@@ -755,7 +1015,7 @@ $naranja: #e2973b;
   @media (min-width: 801px) {
     .btn {
       width: 422px;
-      margin-top: 0 ;
+      margin-top: 0;
     }
   }
 }
@@ -780,7 +1040,7 @@ $naranja: #e2973b;
     }
   }
   h2 {
-    font-family: 'Barlow-SemiBold', sans-serif;
+    font-family: "Barlow-SemiBold", sans-serif;
     font-size: 30px;
     text-align: left;
     width: 100%;
@@ -788,7 +1048,7 @@ $naranja: #e2973b;
   .content {
     height: 750px;
     overflow-y: scroll;
-    font-family: 'Barlow-ExtraLight', sans-serif;
+    font-family: "Barlow-ExtraLight", sans-serif;
     @media (min-width: 801px) {
       height: 200px;
     }
@@ -805,7 +1065,6 @@ $naranja: #e2973b;
 }
 
 .step5Wrapper {
-
   .frame {
     background-color: $rojo;
     margin: 0 80px 80px 80px;
@@ -820,7 +1079,7 @@ $naranja: #e2973b;
     // margin: 80px 30px 30px 30px;
     padding-top: 40px;
     color: #fff;
-    font-family: 'Barlow-Black';
+    font-family: "Barlow-Black";
     line-height: 80px;
     @media (min-width: 801px) {
       font-size: 70px;
@@ -836,6 +1095,8 @@ $naranja: #e2973b;
       line-height: 0;
       img {
         width: 400px;
+        height: 300px;
+        object-fit: contain;
       }
       @media (min-width: 801px) {
         img {
@@ -844,7 +1105,7 @@ $naranja: #e2973b;
       }
     }
     .name {
-      font-family: 'Barlow-ExtraLightItalic', sans-serif;
+      font-family: "Barlow-ExtraLightItalic", sans-serif;
       font-size: 50px;
       text-transform: uppercase;
       margin-top: 40px;
@@ -859,5 +1120,4 @@ $naranja: #e2973b;
     }
   }
 }
-
 </style>
