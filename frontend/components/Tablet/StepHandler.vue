@@ -142,7 +142,8 @@ const fetchProfessional = async () => {
 
 const postMeetingSlotBlock = async () => {
   const { data } = await $fetch(
-    `${API_ENDPOINT}/meeting-slots-block?user_id=${dataExhibitor.value.id}&slot_id=513`,
+    `${API_ENDPOINT}/meeting-slot-block?user_id=${dataExhibitor.value.id}&slot_id=513`,
+    // `${API_ENDPOINT}/meeting-slot-block?user_bracelet=${nfcSerialNumberExhibitor.value}&table_name=${props.tableName}`,
     {
       method: "POST",
       headers: {
@@ -402,7 +403,7 @@ const resetTablet = () => {
 <template>
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
-  <div id="output" v-if="true" class="output">
+  <div id="output" v-if="false" class="output">
     <div id="content">{{ nfcContent }}</div>
     <div id="status">{{ nfcStatus }}</div>
     <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
@@ -536,7 +537,7 @@ const resetTablet = () => {
               id="companyType"
               class="companyType"
             >
-              <option value="default" disabled selected>Choose an option</option>
+              <option value="default" disabled selected>Company Type</option>
               <option value="Complementary offer">Complementary offer</option>
               <option value="Experiences">Experiences</option>
               <option value="Incentives / DMC">Incentives / DMC</option>
