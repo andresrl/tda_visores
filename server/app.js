@@ -90,33 +90,39 @@ app.post("/api/save-meeting-json", (req, res) => {
 
   const filePath = path.join(__dirname, 'meetings.json');
 
-  fs.readFile(filePath, 'utf8', (err, data) => {
+  fs.readFile(filePath, (err, data) => {
     if (err) {
       console.error('Error al leer el archivo: ', err);
-      return res.status(500).json({ status: 'error', message: 'Error al leer los datos existentes' });
+      res.status(500).send({ status: 'error', message: 'Error al leer los datos existentes' });
+      return;
     }
 
     let meetings;
+
+    // Intentar parsear los datos existentes
     try {
       meetings = data.length ? JSON.parse(data) : [];
     } catch (parseError) {
-      console.error('Error al parsear el archivo JSON: ', parseError);
-      return res.status(500).json({ status: 'error', message: 'Error al parsear los datos existentes' });
+      console.error('Error al parsear los datos existentes: ', parseError);
+      res.status(500).send({ status: 'error', message: 'Error al parsear los datos existentes' });
+      return;
     }
 
     meetings.push({ company_name, company_tradename, company_username, company_email, professional_fullname, professional_company, professional_email, professional_sector });
 
-    fs.writeFile(filePath, JSON.stringify(meetings, null, 2), (writeErr) => {
-      if (writeErr) {
-        console.error('Error al escribir en el archivo: ', writeErr);
-        return res.status(500).json({ status: 'error', message: 'Error al guardar los datos' });
+    fs.writeFile(filePath, JSON.stringify(meetings, null, 2), (writeError) => {
+      if (writeError) {
+        console.error('Error al escribir en el archivo: ', writeError);
+        res.status(500).send({ status: 'error', message: 'Error al guardar los datos' });
+        return;
       }
 
       console.log('Datos insertados con éxito');
-      res.json({ status: 'success', message: 'Datos insertados con éxito' });
+      res.send({ status: 'success', message: 'Datos insertados con éxito' });
     });
   });
 });
+
 
 
 app.get("/api/get-meetings", (req, res) => {
