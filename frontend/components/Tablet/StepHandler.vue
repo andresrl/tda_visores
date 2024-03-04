@@ -172,9 +172,10 @@ const fetchProfessional = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
+  console.log("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
   const body = {
-    // meeting_space_id: MeetingSpaceId.value,
-    meeting_space_id: 43,
+            // meeting_space_id: MeetingSpaceId.value,
+            meeting_space_id: 43,
     user_id: ExhibitorIdFromNFC.value,
   };
 
@@ -205,23 +206,26 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
+  console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
-    company_name: dataExhibitor.value.user.company_name,
-    company_tradename: dataExhibitor.value.user.company_trade_name,
+    company_name: dataExhibitor.value.company_name,
+    company_tradename: dataExhibitor.value.company_trade_name,
     company_username:
-      dataExhibitor.value.user.name + " - " + dataExhibitor.value.user.surname,
-    company_email: dataExhibitor.value.user.email,
+      dataExhibitor.value.name + " - " + dataExhibitor.value.surname,
+    company_email: dataExhibitor.value.email,
     professional_fullname: professionalName.value,
     professional_company: professionalCompanyName.value,
     professional_email: professionalEmail.value,
     professional_sector: professionalCompanyType.value,
   };
 
-  // const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting-json`, {
-  const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/`, {
+  const { data } = await $fetch(`${runtimeConfig.public.NODE_SERVER_URL}/api/save-meeting-json`, {
+  // const { data } = await $fetch(`${runtimeConfig.public.BACKEND_SERVER_URL}/`, {
     method: "POST",
     body: JSON.stringify(body),
   });
+
+
 
 
   // const params = new URLSearchParams({
@@ -251,6 +255,12 @@ function emitChangeStep(step) {
   emit("changeStep", step);
 }
 
+
+/////////////////////////////////
+/////////////////////////////////
+// START MEETING 
+/////////////////////////////////
+/////////////////////////////////
 const startMeeting = () => {
   if (professionalName.value === "") {
     alert("Please enter your name");
@@ -272,9 +282,15 @@ const startMeeting = () => {
     alert("Please accept the disclaimer");
     return;
   }
-  postMeetingSlotBlock();
-  postMeetingData();
-  emitChangeStep(5);
+  // if(!isHot.value && (ExhibitorIdFromNFC.value !== ExhibitorIdfromTableNumber.value)) {
+  //   alert ("You are not allowed to reserve this table")
+  // }
+  // else {
+    postMeetingSlotBlock();
+    postMeetingData();
+    emitChangeStep(5);
+  // }
+
 };
 
 /////////////////////////////////
@@ -363,7 +379,7 @@ onMounted(() => {
   }
 
   if(!isHot.value) {
-    // fetchExhibitorbyId(ExhibitorIdfromTableNumber.value);
+    fetchExhibitorbyId(ExhibitorIdfromTableNumber.value);
 
     // fetchExhibitorIdByTableNumber()
   }
@@ -544,7 +560,10 @@ const resetTablet = () => {
               <div class="subtitle" v-if="scanText1==''">SCAN TO RESERVE</div>
               <div class="hit" v-if="scanText1==''">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
-                <div class="btn" @click="scanNFCStep1Click" v-if="scanText1 ==''" >Press to Scan Bracelet</div>
+                <div class="btn" @click="scanNFCStep1Click" v-if="scanText1 ==''" >
+                <!-- Press to Scan Bracelet -->
+                <img src="/img/tablet/btn-press-to-scan-bracelet.png" alt="" />
+                </div>
                 <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div> -->
                 <div id="log" style="color: #ffffff">{{ scanText1 }}</div>
               </div>
@@ -696,34 +715,34 @@ const resetTablet = () => {
         <div class="frame">
           <h2>Disclaimer Acceptance</h2>
           <div class="content">
-<p><strong><span style="font-size:22pt;">Privacy</span></strong></p>
-<p><strong><span style="font-size:11pt;">Privacy Policy and Data Protection Regulations</span></strong></p>
-<p><span>Through this portal, no personal data is collected from users without their consent.</span></p>
-<p><span>The personal data provided during your registration on the website, as well as any information provided through the use of the portal, will be treated confidentially for the sole and specific purpose of each processing. These data will be incorporated into the corresponding processing activities of the Public Company for the Management of Tourism and Sports in Andalusia, in accordance with Regulation (EU) 2016/679 of the European Parliament and of the Council on the protection of personal data (General Data Protection Regulation) and Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
-<p><span>Text fields identified as mandatory in the Registered User registration form must be completed by the interested parties. Failure to complete any of them could prevent the processing of your registration as a Registered User.</span></p>
-<p><span>In compliance with Article 32 of the GDPR regarding the security of processing, the website management company has implemented appropriate technical and organizational measures to ensure an adequate level of security that guarantees the security of data and prevents its alteration, loss, treatment, or unauthorized access. This is done considering the state of the art, nature, scope, context, and purposes of processing.</span></p>
-<p><span>The legitimacy of the processing is based on the consent of the users, in accordance with Article 6.1 a) of the GDPR.</span></p>
-<p><span>The personal data provided will be kept for the time necessary to fulfill the purpose for which they are collected, as specified in each processing activity.</span></p>
-<p><span>The collected data will only be subject to transfer, if applicable, with the prior consent of the interested party, and the recipients of the different processing activities can be consulted in the Registry of Processing Activities of the entity.</span></p>
-<p><span>The portal contains links to third-party websites with privacy policies unrelated to its own, for which it is not responsible. You will decide on the acceptance of those policies.</span></p>
-<p><span>Individuals whose personal data is processed by the entity can exercise the rights of access, rectification, erasure, objection, restriction of processing, and data portability, as well as object to automated individual decision-making, including profiling, as provided by current legislation. This can be done by contacting the data controller by sending a communication, including a copy of your ID, to the following email address: andalucia@andalucia.org, or to the address of the Public Company for the Management of Tourism and Sports in Andalusia at C/ Compa&ntilde;&iacute;a, 40 29008 M&aacute;laga (Spain).</span></p>
-<p><span>Users also have the right to file a complaint with the Spanish Data Protection Agency.</span></p>
-<p><span>By checking the corresponding box labeled &quot;I wish to receive the Newsletter,&quot; you authorize the Public Company for the Management of Tourism and Sports in Andalusia to send you information and promotional communications through any means, including electronic (email, etc.), regarding activities, initiatives, and/or services organized or sponsored by the Public Company for the Management of Tourism and Sports in Andalusia and/or the Ministry of Tourism, Trade, and Sports of the Andalusian Regional Government.</span></p>
-<p><span>In this regard, you can oppose the processing of your data for this purpose at any time, either when providing the data by checking the box included in the corresponding data collection forms or at any later time by sending an email to andalucia@andalucia.org or using specific means recognized in the commercial communications themselves.</span></p>
-<p><span>Similarly, by checking the acceptance box for the recommendation engine, you agree that recommendations will be shown during your navigation on the portal based on your interests to improve your browsing experience.</span></p>
-<p><span>Legal Notice</span></p>
-<p><span>Content Responsibility</span></p>
-<p><span>The Registered User undertakes to comply punctually with all the terms set out in the Terms of Use and not to use the website for illegal, fraudulent, or unauthorized purposes under the Terms of Use. In this regard, the Registered User will be responsible for the legal consequences arising from non-compliance with the terms set out in these Terms of Use.</span></p>
-<p><span>The Public Company for the Management of Tourism and Sports in Andalusia will only be responsible for damages that the Registered User may suffer from the use of the website when such damages are due to our intentional actions.</span></p>
-<p><span>The Public Company for the Management of Tourism and Sports in Andalusia is not responsible for the legality of other third-party websites from which access to the portal is possible.</span></p>
-<p><span>Modification of Terms of Use</span></p>
-<p><span>These Terms of Use are currently in effect. However, the Public Company for the Management of Tourism and Sports in Andalusia reserves the right to modify these Terms of Use at any time while respecting current regulations, without such modification having retroactive effect.</span></p>
-<p><span>Nullity of Clauses</span></p>
-<p><span>In the event that any of the provisions contained in these Terms of Use is declared null, it will be removed or replaced. In any case, such a declaration of nullity will not affect the validity of the other provisions contained in these Terms of Use.</span></p>
-<p><span>Applicable Legislation</span></p>
-<p><span>Law 34/2002, of July 11, on Services of the Information Society and Electronic Commerce (LSSI).</span></p>
-<p><span>Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016, regarding the protection of individuals concerning the processing of personal data and the free movement of such data and repealing Directive 95/46/EC (General Data Protection Regulation).</span></p>
-<p><span>Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
+              <p><strong><span style="font-size:22pt;">Privacy</span></strong></p>
+              <p><strong><span style="font-size:11pt;">Privacy Policy and Data Protection Regulations</span></strong></p>
+              <p><span>Through this portal, no personal data is collected from users without their consent.</span></p>
+              <p><span>The personal data provided during your registration on the website, as well as any information provided through the use of the portal, will be treated confidentially for the sole and specific purpose of each processing. These data will be incorporated into the corresponding processing activities of the Public Company for the Management of Tourism and Sports in Andalusia, in accordance with Regulation (EU) 2016/679 of the European Parliament and of the Council on the protection of personal data (General Data Protection Regulation) and Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
+              <p><span>Text fields identified as mandatory in the Registered User registration form must be completed by the interested parties. Failure to complete any of them could prevent the processing of your registration as a Registered User.</span></p>
+              <p><span>In compliance with Article 32 of the GDPR regarding the security of processing, the website management company has implemented appropriate technical and organizational measures to ensure an adequate level of security that guarantees the security of data and prevents its alteration, loss, treatment, or unauthorized access. This is done considering the state of the art, nature, scope, context, and purposes of processing.</span></p>
+              <p><span>The legitimacy of the processing is based on the consent of the users, in accordance with Article 6.1 a) of the GDPR.</span></p>
+              <p><span>The personal data provided will be kept for the time necessary to fulfill the purpose for which they are collected, as specified in each processing activity.</span></p>
+              <p><span>The collected data will only be subject to transfer, if applicable, with the prior consent of the interested party, and the recipients of the different processing activities can be consulted in the Registry of Processing Activities of the entity.</span></p>
+              <p><span>The portal contains links to third-party websites with privacy policies unrelated to its own, for which it is not responsible. You will decide on the acceptance of those policies.</span></p>
+              <p><span>Individuals whose personal data is processed by the entity can exercise the rights of access, rectification, erasure, objection, restriction of processing, and data portability, as well as object to automated individual decision-making, including profiling, as provided by current legislation. This can be done by contacting the data controller by sending a communication, including a copy of your ID, to the following email address: andalucia@andalucia.org, or to the address of the Public Company for the Management of Tourism and Sports in Andalusia at C/ Compa&ntilde;&iacute;a, 40 29008 M&aacute;laga (Spain).</span></p>
+              <p><span>Users also have the right to file a complaint with the Spanish Data Protection Agency.</span></p>
+              <p><span>By checking the corresponding box labeled &quot;I wish to receive the Newsletter,&quot; you authorize the Public Company for the Management of Tourism and Sports in Andalusia to send you information and promotional communications through any means, including electronic (email, etc.), regarding activities, initiatives, and/or services organized or sponsored by the Public Company for the Management of Tourism and Sports in Andalusia and/or the Ministry of Tourism, Trade, and Sports of the Andalusian Regional Government.</span></p>
+              <p><span>In this regard, you can oppose the processing of your data for this purpose at any time, either when providing the data by checking the box included in the corresponding data collection forms or at any later time by sending an email to andalucia@andalucia.org or using specific means recognized in the commercial communications themselves.</span></p>
+              <p><span>Similarly, by checking the acceptance box for the recommendation engine, you agree that recommendations will be shown during your navigation on the portal based on your interests to improve your browsing experience.</span></p>
+              <p><span>Legal Notice</span></p>
+              <p><span>Content Responsibility</span></p>
+              <p><span>The Registered User undertakes to comply punctually with all the terms set out in the Terms of Use and not to use the website for illegal, fraudulent, or unauthorized purposes under the Terms of Use. In this regard, the Registered User will be responsible for the legal consequences arising from non-compliance with the terms set out in these Terms of Use.</span></p>
+              <p><span>The Public Company for the Management of Tourism and Sports in Andalusia will only be responsible for damages that the Registered User may suffer from the use of the website when such damages are due to our intentional actions.</span></p>
+              <p><span>The Public Company for the Management of Tourism and Sports in Andalusia is not responsible for the legality of other third-party websites from which access to the portal is possible.</span></p>
+              <p><span>Modification of Terms of Use</span></p>
+              <p><span>These Terms of Use are currently in effect. However, the Public Company for the Management of Tourism and Sports in Andalusia reserves the right to modify these Terms of Use at any time while respecting current regulations, without such modification having retroactive effect.</span></p>
+              <p><span>Nullity of Clauses</span></p>
+              <p><span>In the event that any of the provisions contained in these Terms of Use is declared null, it will be removed or replaced. In any case, such a declaration of nullity will not affect the validity of the other provisions contained in these Terms of Use.</span></p>
+              <p><span>Applicable Legislation</span></p>
+              <p><span>Law 34/2002, of July 11, on Services of the Information Society and Electronic Commerce (LSSI).</span></p>
+              <p><span>Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016, regarding the protection of individuals concerning the processing of personal data and the free movement of such data and repealing Directive 95/46/EC (General Data Protection Regulation).</span></p>
+              <p><span>Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
           </div>
           <div class="cta">
             <div class="btn" @click="emitChangeStep(3)">Back</div>
@@ -736,10 +755,17 @@ const resetTablet = () => {
         nfcSerialNumberExhibitor: {{ nfcSerialNumberExhibitor }}<br>
         dataExhibitor.company_trade_name: {{ dataExhibitor.company_trade_name }}
       </div> -->
-      <Tablet_Header
+      <!-- <Tablet_Header
         :countDownCount="remaingTimeText"
         ctaGoToStep="1"
         ctaText="false"
+        tableText="false"
+        @changeStep="emitChangeStep(1)"
+      /> -->
+      <Tablet_Header
+        :countDownCount="remaingTimeText"
+        ctaGoToStep="4"
+        ctaText="Exit Table"
         tableText="false"
         @changeStep="emitChangeStep(1)"
       />
