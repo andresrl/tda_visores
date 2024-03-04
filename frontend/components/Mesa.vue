@@ -38,7 +38,7 @@ const empresa = computed(() => {
       seleccionada: estaSeleccionada,
     }"
   >
-    <div>{{ empresa?.company_trade_name ?? "Libre" }}</div>
+    <div>{{ empresa?.company_trade_name ?? "FREE" }}</div>
   </button>
 </template>
 
@@ -50,7 +50,7 @@ $verde: #00ce7e;
   height: 250px;
   width: 250px;
   font-family: Barlow-Black;
-  font-size: 1.2em;
+  font-size: .8em;
   line-height: 1em;
   border: 0.1em solid $verde;
 

@@ -43,7 +43,7 @@ const nfcLog3 = ref("");
 const scanText1 = ref('');
 const scanText2 = ref('');
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -183,7 +183,7 @@ const fetchProfessional = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
-  console.log("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
+  alert("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
   const body = {
             // meeting_space_id: MeetingSpaceId.value,
             meeting_space_id: 43,
@@ -458,6 +458,7 @@ const scanNFCStep2Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        alert("NFC SCANNED", serialNumber);
         nfcSerialNumberProfessional.value = serialNumber;
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
