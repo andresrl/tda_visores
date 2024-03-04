@@ -60,7 +60,7 @@ const isHot = ref(false);
 
 let interval = null;
 
-const ExhhibitorIsScanning = ref(true);
+const ExhibitorIsScanning = ref(true);
 
 const tableText = computed(() => {
   // console.log("props.tableName 1", dataMeetingSpaces.value);
@@ -421,7 +421,7 @@ const scanNFCClick = async () => {
   scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
 
   if (nfcSimulate.value) {
-    if( ExhhibitorIsScanning.value === true) {
+    if( ExhibitorIsScanning.value === true) {
       nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
     }
     else if (props.step === 2){
@@ -442,15 +442,15 @@ const scanNFCClick = async () => {
       // Define el listener para el evento de lectura
       const onNFCReading = ({ serialNumber }) => {
         nfcStatus.value = "> NFC Tag scanned:" +  serialNumber;
-        if( ExhhibitorIsScanning.value === true) {
-          alert("ExhhibitorIsScanning.value === true");
+        if( ExhibitorIsScanning.value === true) {
+          alert("ExhibitorIsScanning.value === true");
           nfcSerialNumberExhibitor.value = serialNumber;
-          ExhhibitorIsScanning.value = false;
+          ExhibitorIsScanning.value = false;
         }
         else if (props.step === 2){
-          alert("ExhhibitorIsScanning.value === falseprops.step === 2");
+          alert("ExhibitorIsScanning.value === falseprops.step === 2");
           nfcSerialNumberProfessional.value = serialNumber;
-          ExhhibitorIsScanning.value = true;
+          ExhibitorIsScanning.value = true;
         }
         // nfcStatus.value = "> Scanning stopped";
 
@@ -466,7 +466,7 @@ const scanNFCClick = async () => {
       nfcLog3.value = `Argh! ${error}`;
     }
   }
-  ExhhibitorIsScanning.value = false;
+  // ExhibitorIsScanning.value = false;
 }
 
 /*
