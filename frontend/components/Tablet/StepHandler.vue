@@ -217,7 +217,7 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
-  alert(dataExhibitor.value.company_trade_name)
+  // alert(dataExhibitor.value.company_trade_name)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
     company_name: exhibitorCompanyName.value,
@@ -537,6 +537,10 @@ const resetTablet = () => {
   scanText2.value = "";
   dataExhibitor.value = {};
   dataProfessional.value = {};
+  exhibitorCompanyName.value = ""
+  exhibitorTradeName.value = ""
+  exhibitorName.value = ""
+  exhibitorEmail.value = ""
 };
 </script>
 
