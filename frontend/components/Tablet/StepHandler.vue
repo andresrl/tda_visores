@@ -43,7 +43,7 @@ const nfcLog3 = ref("");
 const scanText1 = ref('');
 const scanText2 = ref('');
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -443,10 +443,12 @@ const scanNFCClick = async () => {
       const onNFCReading = ({ serialNumber }) => {
         nfcStatus.value = "> NFC Tag scanned:" +  serialNumber;
         if( ExhhibitorIsScanning.value === true) {
+          alert("ExhhibitorIsScanning.value === true");
           nfcSerialNumberExhibitor.value = serialNumber;
           ExhhibitorIsScanning.value = false;
         }
         else if (props.step === 2){
+          alert("ExhhibitorIsScanning.value === falseprops.step === 2");
           nfcSerialNumberProfessional.value = serialNumber;
           ExhhibitorIsScanning.value = true;
         }
