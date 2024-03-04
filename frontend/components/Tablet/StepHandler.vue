@@ -47,6 +47,9 @@ const tableText = computed(() => {
 });
 
 
+const ExhibitorIdfromTableNumber = ref("");
+const ExhibitorIdFromNFC = ref("");
+
 const ExhibitorTradeName = ref("");
 const ExhibitorLogoUrl = ref("");
 
@@ -114,8 +117,24 @@ const fetchExhibitor = async () => {
     }
   );
   dataExhibitor.value = data.user;
+  ExhibitorIdFromNFC.value = dataExhibitor.value.id;
   ExhibitorTradeName.value = dataExhibitor.value.company_trade_name;
   ExhibitorLogoUrl.value = dataExhibitor.value.full_url_logo;
+};
+
+const fetchExhibitorByTableNumber = async () => {
+  // https://andalusiancrushlink.com/api/bracelet/3034/true
+  const { data } = await $fetch(
+    `${API_ENDPOINT}/meeting-spaces/`,
+    {
+      headers: {
+        Authorization: BEARER_TOKEN,
+      },
+    }
+  );
+    
+  // Utiliza 'find' para buscar una coincidencia
+  return data.find(table => 't'+table.code == props.tableName);
 };
 
 const fetchProfessional = async () => {
@@ -310,6 +329,15 @@ onMounted(() => {
     console.log("tableName changed");
     fetchMeetingSpaces();
   }
+  if(!isHot.value) {
+    fetchExhibitorbyId(ExhibitorTradeId.value);
+
+    fetchExhibitorByTableNumber(props.tableName)
+      .then((table) => {
+        ExhibitorIdfromTableNumber.value = table.user_id;
+        fetchExhibitorbyId(table.user_id);
+      });
+  }
 });
 
 
@@ -375,6 +403,14 @@ const scanNFCStep2Click = async () => {
 };
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
+  if(!isHot.value) {
+    if(ExhibitorIdfromTableNumber !== ExhibitorIdFromNFC) {}
+      fcLog2.value = `NO COINCIDE EL NFC CON LA MESA`;
+    } 
+    else {
+      `SI COINCIDE EL NFC CON LA MESA`
+    }
+  }
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
     fetchExhibitor();
