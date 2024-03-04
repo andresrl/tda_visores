@@ -148,7 +148,6 @@ const fetchExhibitorfromNFC = async () => {
   ExhibitorTradeName.value = dataExhibitor.value.company_trade_name;
   ExhibitorLogoUrl.value = dataExhibitor.value.full_url_logo;
 
-  emitChangeStep(2);
   nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
 
 };
@@ -597,9 +596,10 @@ const scanNFCStep2Click = async () => {
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   if (newVal !== "") {
+    alert("nfcSerialNumberExhibitor SERIAL NUMBER CHANGED");
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
     fetchExhibitorfromNFC();
-    // emitChangeStep(2);
+    emitChangeStep(2);
     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   }
   // console.warn ("NFCCCC " + ExhibitorIdfromTableNumber.value + " NFCCCC " + ExhibitorIdFromNFC.value);
@@ -628,6 +628,7 @@ watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
 });
 
 watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
+  alert("nfcSerialNumberEnfcSerialNumberProfessionalhibitor SERIAL NUMBER CHANGED");
   console.log("nfcSerialNumberProfessional changed");
   if (newVal !== "") {
     nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
