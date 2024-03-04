@@ -439,7 +439,8 @@ const scanNFCStep1Click = async () => {
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
           console.log("NFC scanning stopped");
-          nfcStatus.value = "> Scanning stopped";
+          alert("> Scanning stopped");
+          nfcStatus.value = "> Scanning 1 stopped";
         }).catch((error) => {
           console.error("Error stopping NFC scan", error);
         });
@@ -473,7 +474,7 @@ const scanNFCStep2Click = async () => {
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
           console.log("NFC scanning stopped");
-          nfcStatus.value = "> Scanning stopped";
+          nfcStatus.value = "> Scanning 2 stopped";
         }).catch((error) => {
           console.error("Error stopping NFC scan", error);
         });
@@ -558,7 +559,7 @@ const resetTablet = () => {
 <template>
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
-  <div id="output" v-if="false" class="output">
+  <div id="output" v-if="true" class="output">
     <div id="content">{{ nfcContent }}</div>
     <div id="status">{{ nfcStatus }}</div>
     <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
