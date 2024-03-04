@@ -425,7 +425,7 @@ const scanNFCStep1Click = async () => {
     if( ExhhibitorIsScanning.value === true) {
       nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
     }
-    else {
+    else if (props.step === 2){
       nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
     }
     nfcStatus.value = "> Scanning 1...";
@@ -447,7 +447,7 @@ const scanNFCStep1Click = async () => {
           nfcSerialNumberExhibitor.value = serialNumber;
           ExhhibitorIsScanning.value = false;
         }
-        else {
+        else if (props.step === 2){
           nfcSerialNumberProfessional.value = serialNumber;
           ExhhibitorIsScanning.value = true;
         }
