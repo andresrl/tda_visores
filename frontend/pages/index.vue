@@ -47,8 +47,7 @@ const fetchDataEmociones = async () => {
       };
     });
 
-  // Si se añaden o elimian, sobrescribimos array entero
-
+  // Si se añaden o eliminan, sobrescribimos array entero
   if (updatedFichas.length !== fichas.value.length) {
     return (fichas.value = updatedFichas);
   }
@@ -87,8 +86,15 @@ const fetchDataTiempoReal = async () => {
   // );
 
   tiempoReal.value = {
-    ...goli2,
-    ...api2,
+    edad: goli2.edad,
+    visitantes: goli2.visitantes,
+    "emocion predominante": goli2["emocion predominante"],
+    hombres: goli2.hombres,
+    mujeres: goli2.mujeres,
+
+    companies: api2.companies,
+    professionals: api2.professionals,
+    meetings: api2.meetings,
   };
 };
 
@@ -103,7 +109,22 @@ const fetchDataPosts = async () => {
     },
   });
 
-  posts.value = data.filter((c) => !!c.featured_offer);
+  const updatedPosts = data.filter((c) => !!c.featured_offer);
+
+  if (posts.value.length > updatedPosts.length) {
+    posts.value.splice(
+      posts.value.length,
+      posts.value.length - updatedPosts.length,
+    );
+  }
+
+  updatedPosts.forEach((updatedPost, index) => {
+    if (index < posts.value.length) {
+      posts.value[index] = updatedPost;
+    } else {
+      posts.value.push(updatedPost);
+    }
+  });
 };
 
 const onSwiper = (swiper) => {
@@ -175,7 +196,7 @@ onBeforeUnmount(() => {
     :autoplay="{ delay: DELAY_SLIDER_EMOCIONES, disableOnInteraction: false }"
     :loop="true"
   >
-    <SwiperSlide v-for="(ficha, index) in fichas" :key="ficha">
+    <SwiperSlide v-for="(ficha, index) in fichas" :key="`ficha-${index}`">
       <SlideEmocion
         :ficha="ficha"
         :current-slide-index="currentSlideIndex"
@@ -183,7 +204,7 @@ onBeforeUnmount(() => {
       />
     </SwiperSlide>
 
-    <SwiperSlide>
+    <SwiperSlide key="tiemporeal-1">
       <SlideTiempoReal
         :current-slide-index="currentSlideIndex"
         :index="fichas.length"
@@ -191,14 +212,15 @@ onBeforeUnmount(() => {
       />
     </SwiperSlide>
 
-    <SwiperSlide>
+    <SwiperSlide key="tiemporeal-2">
       <SlideTiempoRealSegunda
         :current-slide-index="currentSlideIndex"
         :index="fichas.length + 1"
         :tiempo-real="tiempoReal"
       />
     </SwiperSlide>
-    <SwiperSlide v-for="(post, index) in posts" :key="post">
+
+    <SwiperSlide v-for="(post, index) in posts" :key="`post-${index}`">
       <SlideCompanyPost
         :empresa="post"
         :index="fichas.length + 2 + index"
