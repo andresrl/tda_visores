@@ -594,7 +594,6 @@ const scanNFCStep2Click = async () => {
   }
 };
 */
-*/
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   if (newVal !== "") {
