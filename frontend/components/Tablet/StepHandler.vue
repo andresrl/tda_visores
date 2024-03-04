@@ -17,38 +17,9 @@ const props = defineProps({
   },
 });
 
-const tableText = computed(() => {
-  // console.log("props.tableName 1", dataMeetingSpaces.value);
-  // console.log("props.tableName 2", props.tableName);
-  if(props.tableName) {
-    let table = dataMeetingSpaces.value
-      .find((item) => item.table_name ===  props.tableName.toUpperCase());
-
-    // console.log("props.tableName props.tableName.toLowerCase", props.tableName.toUpperCase());
-    // console.log("props.tableName 3", table);
-
-    // Verificar si encontramos una coincidencia
-    if (table) {
-      // Acceder a la propiedad 'table_name'
-      fetchExhibitorbyId(table.user_id);
-
-      isHot.value = (table.name === "H") ? true : false;
-
-      return `Table ${table.table_name}`;
-    } else {
-      // Manejar el caso cuando no encontramos una coincidencia
-      return "";
-      // return "Table not found";
-    }
-  }
-  else {
-    return "Table 23";
-  }
-});
-
-
 const ExhibitorIdfromTableNumber = ref("");
 const ExhibitorIdFromNFC = ref("");
+const MeetingSpaceId = ref("");
 
 const ExhibitorTradeName = ref("");
 const ExhibitorLogoUrl = ref("");
@@ -64,6 +35,8 @@ const nfcLog0 = ref("");
 const nfcLog1 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
+const scanText1 = ref('');
+const scanText2 = ref('');
 
 const nfcSimulate = ref(false);
 const nfcSerialNumberExhibitor = ref("");
@@ -81,6 +54,42 @@ const dataProfessional = ref({});
 const isHot = ref(false);
 
 let interval = null;
+
+
+const tableText = computed(() => {
+  // console.log("props.tableName 1", dataMeetingSpaces.value);
+  // console.log("props.tableName 2", props.tableName);
+  if(props.tableName) {
+    let table = dataMeetingSpaces.value
+      .find((item) => item.table_name ===  props.tableName.toUpperCase());
+
+    // console.log("props.tableName props.tableName.toLowerCase", props.tableName.toUpperCase());
+    // console.log("props.tableName 3", table);
+
+    // Verificar si encontramos una coincidencia
+    
+    if (table) {
+      // Acceder a la propiedad 'table_name'
+      fetchExhibitorbyId(table.user_id);
+
+      MeetingSpaceId.value = table.id;
+
+      // alert("SPACE ID: " + MeetingSpaceId.value);
+
+      isHot.value = (table.name === "H") ? true : false;
+
+      return `Table ${table.table_name}`;
+    } else {
+      // Manejar el caso cuando no encontramos una coincidencia
+      return "";
+      // return "Table not found";
+    }
+  }
+  else {
+    return "Table 23";
+  }
+});
+
 
 const fetchMeetingSpaces = async () => {
   const { data } = await $fetch(`${API_ENDPOINT}/meeting-spaces`, {
@@ -163,16 +172,36 @@ const fetchProfessional = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
-  const { data } = await $fetch(
-    `${API_ENDPOINT}/meeting-slot-block?user_id=${dataExhibitor.value.id}&slot_id=513`,
-    // `${API_ENDPOINT}/meeting-slot-block?user_bracelet=${nfcSerialNumberExhibitor.value}&table_name=${props.tableName}`,
-    {
+  const body = {
+    // meeting_space_id: MeetingSpaceId.value,
+    meeting_space_id: 43,
+    user_id: ExhibitorIdFromNFC.value,
+  };
+
+  try {
+    // Realizar la solicitud POST y obtener la respuesta completa
+    const response = await $fetch(`${API_ENDPOINT}/meeting-slot-block`, {
       method: "POST",
+      body: JSON.stringify(body),
       headers: {
         Authorization: BEARER_TOKEN,
       },
     });
-    console.log(data);
+
+    // Verificar el estado de la respuesta
+    if (response.status === 200) {
+      // Si el estado es 200, acceder al cuerpo de la respuesta (asumiendo que 'response' tiene una propiedad 'data')
+      const data = response.data;
+      // alert("DATA: " + data);
+      console.log(data);
+    } else {
+      // Manejar otros estados HTTP según sea necesario
+      console.error("Respuesta no exitosa:", response.status);
+    }
+  } catch (error) {
+    // Manejar errores de la solicitud (incluidos los estados HTTP no exitosos si $fetch arroja excepciones para estos)
+    console.error("Error en la solicitud:", error);
+  }
 };
 
 const postMeetingData = async () => {
@@ -357,6 +386,8 @@ if (process.client) {
 const scanNFCStep1Click = async () => {
   // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
+  // alert("SCAN NFC STEP 1 CLICKED");
+  scanText1.value = ref("Swipe the wristband across the rear NFC reader for scanning");
   if (nfcSimulate.value) {
     nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
     nfcStatus.value = "> Scanning...";
@@ -364,6 +395,7 @@ const scanNFCStep1Click = async () => {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
+      console.log("Swipe the wristband across the rear NFC reader for scanning");
       nfcStatus.value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
@@ -380,9 +412,11 @@ const scanNFCStep1Click = async () => {
 const scanNFCStep2Click = async () => {
   console.log("SCAN NFC STEP 2 CLICKED");
   // scanButton.addEventListener("click", async () => {
+    
+  scanText2.value = ref("Swipe the wristband across the rear NFC reader for scanning");
   nfcLog0.value = "User Clicked Button";
   if (nfcSimulate.value) {
-    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
+    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;  
     nfcStatus.value = "> Scanning...";
   } else {
     try {
@@ -462,6 +496,8 @@ const resetTablet = () => {
   nfcLog0.value = "";
   nfcLog2.value = "";
   nfcLog3.value = "";
+  scanText1.value = "";
+  scanText2.value = "";
   dataExhibitor.value = {};
   dataProfessional.value = {};
 };
@@ -501,16 +537,16 @@ const resetTablet = () => {
             </div>
           </div>
           <div class="scan-subtitle">
-            <div class="scanIcon">
+            <div class="scanIcon" v-if="scanText1 ==''">
               <img src="/img/tablet/mano-tablet-blanco@2x.png" alt="" />
             </div>
             <div class="text">
-              <div class="subtitle">SCAN TO RESERVE</div>
-              <div class="hit">(ONLY ANDALUSIAN PROFESSIONAL)</div>
+              <div class="subtitle" v-if="scanText1==''">SCAN TO RESERVE</div>
+              <div class="hit" v-if="scanText1==''">(ONLY ANDALUSIAN PROFESSIONAL)</div>
               <div class="cta">
-                <div class="btn" @click="scanNFCStep1Click">Press to Scan Bracelet</div>
+                <div class="btn" @click="scanNFCStep1Click" v-if="scanText1 ==''" >Press to Scan Bracelet</div>
                 <!-- <div class="btn" @click="emitChangeStep(2)">Ir a paso 2</div> -->
-                <div id="log" style="color: #ffffff">{{ nfcLog2 }}</div>
+                <div id="log" style="color: #ffffff">{{ scanText1 }}</div>
               </div>
             </div>
           </div>
@@ -555,7 +591,7 @@ const resetTablet = () => {
                   Press to Scan Bracelet
                 </div>
               </div>
-              <div id="log" style="color: #ffffff; text-align: left">{{ nfcLog3 }}</div>
+              <div id="log" style="color: #ffffff; text-align: left">{{ scanText2 }}</div>
             </div>
             <div class="cta">
               <div class="or">Or</div>
@@ -859,7 +895,7 @@ select {
           font-size: 60px;
         }
       }
-      .hint {
+      .hit {
         font-size: 28px;
         text-align: center;
         @media (min-width: 801px) {
