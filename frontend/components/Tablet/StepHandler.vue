@@ -454,8 +454,8 @@ const scanNFCStep1Click = async () => {
         nfcStatus.value = "> Scanning stopped";
 
         // Elimina el listener después de la lectura exitosa
-        ndef.removeEventListener("reading", onNFCReading);
-        nfcLog0.value = "Removed NFC reading listener";
+        // ndef.removeEventListener("reading", onNFCReading);
+        // nfcLog0.value = "Removed NFC reading listener";
       };
 
       // Añade el listener al evento de lectura
