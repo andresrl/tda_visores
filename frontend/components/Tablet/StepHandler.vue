@@ -131,6 +131,11 @@ const fetchExhibitorfromNFC = async () => {
     }
   );
 
+  if(data.user.user_type !== "professional-and") {
+    alert("YOU ARE NOT ALLOWED TO RESERVE THIS TABLE");
+    location.reload();
+  }
+
   exhibitorCompanyName.value = data.user.company_name
   exhibitorTradeName.value =data.user.company_trade_name
   exhibitorName.value = data.user.name + ' ' + data.user.surname
@@ -454,7 +459,7 @@ const scanNFCStep2Click = async () => {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcStatus .value = "> Scanning...";
+      nfcStatus.value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
@@ -505,7 +510,7 @@ watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   //     emitChangeStep(2);
   //     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   //   }
-  });
+});
 
 watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   console.log("nfcSerialNumberProfessional changed");
