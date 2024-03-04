@@ -60,6 +60,7 @@ const isHot = ref(false);
 
 let interval = null;
 
+const ExhhibitorIsScanning = ref(true);
 
 const tableText = computed(() => {
   // console.log("props.tableName 1", dataMeetingSpaces.value);
@@ -421,7 +422,12 @@ const scanNFCStep1Click = async () => {
   scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
 
   if (nfcSimulate.value) {
-    nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
+    if( ExhhibitorIsScanning.value === true) {
+      nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
+    }
+    else {
+      nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
+    }
     nfcStatus.value = "> Scanning 1...";
   } else {
     try {
@@ -437,7 +443,14 @@ const scanNFCStep1Click = async () => {
       // Define el listener para el evento de lectura
       const onNFCReading = ({ serialNumber }) => {
         console.log("NFC Tag scanned: ", serialNumber);
-        nfcSerialNumberExhibitor.value = serialNumber;
+        if( ExhhibitorIsScanning.value === true) {
+          nfcSerialNumberExhibitor.value = serialNumber;
+          ExhhibitorIsScanning.value = false;
+        }
+        else {
+          nfcSerialNumberProfessional.value = serialNumber;
+          ExhhibitorIsScanning.value = true;
+        }
         nfcStatus.value = "> Scanning stopped";
 
         // Elimina el listener después de la lectura exitosa
@@ -452,10 +465,11 @@ const scanNFCStep1Click = async () => {
       nfcLog3.value = `Argh! ${error}`;
     }
   }
+  ExhhibitorIsScanning.value = false;
 }
 
 
-const scanNFscanNFCStep2ClickCStep1Click = async () => {
+const scanNFCStep2Click = async () => {
   nfcLog0.value = "User Clicked Button";
   scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
 
@@ -675,7 +689,7 @@ const resetTablet = () => {
               <img
                 src="/img/tablet/mano-tablet-verde@2x.png"
                 style="cursor: pointer"
-                @click="scanNFCStep2Click"
+                @click="scanNFCStep1Click"
                 alt=""
               />
             </div>
@@ -684,7 +698,7 @@ const resetTablet = () => {
                 <!-- SCAN PROFESSIONAL BRACELET -->
                 <div
                   class="btnScan"
-                  @click="scanNFCStep2Click"
+                  @click="scanNFCStep1Click"
                   style="color: #fff; cursor: pointer">
 
                   Press to Scan Bracelet
