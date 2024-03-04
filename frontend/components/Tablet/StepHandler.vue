@@ -192,7 +192,7 @@ const fetchProfessionalfromNFC = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
-  alert("ExhibitorIdFromNFC::::: " + ExhibitorIdFromNFC.value);
+  // alert("ExhibitorIdFromNFC::::: " + ExhibitorIdFromNFC.value);
   const body = {
             // meeting_space_id: MeetingSpaceId.value,
             meeting_space_id: 43,
@@ -226,7 +226,7 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
-  alert(exhibitorCompanyName.value)
+  // alert(exhibitorCompanyName.value)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
     company_name: exhibitorCompanyName.value,
@@ -443,20 +443,15 @@ const scanNFCClick = async () => {
       const onNFCReading = ({ serialNumber }) => {
         nfcStatus.value = "> NFC Tag scanned:" +  serialNumber;
         if( ExhibitorIsScanning.value === true) {
-          alert("ExhibitorIsScanning.value === true");
+          // alert("ExhibitorIsScanning.value === true");
           nfcSerialNumberExhibitor.value = serialNumber;
           ExhibitorIsScanning.value = false;
         }
         else if (props.step === 2){
-          alert("ExhibitorIsScanning.value === falseprops.step === 2");
+          // alert("ExhibitorIsScanning.value === falseprops.step === 2");
           nfcSerialNumberProfessional.value = serialNumber;
           ExhibitorIsScanning.value = true;
         }
-        // nfcStatus.value = "> Scanning stopped";
-
-        // Elimina el listener después de la lectura exitosa
-        // ndef.removeEventListener("reading", onNFCReading);
-        // nfcLog0.value = "Removed NFC reading listener";
       };
 
       // Añade el listener al evento de lectura
@@ -469,168 +464,18 @@ const scanNFCClick = async () => {
   // ExhibitorIsScanning.value = false;
 }
 
-/*
-const scanNFCStep1Click = async () => {
-  nfcLog0.value = "User Clicked Button";
-  scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
-
-  if (nfcSimulate.value) {
-    if( ExhhibitorIsScanning.value === true) {
-      nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
-    }
-    else if (props.step === 2){
-      nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
-    }
-    nfcStatus.value = "> Scanning 1...";
-  } else {
-    try {
-      const ndef = new NDEFReader();
-      await ndef.scan();
-      console.log("Swipe the wristband across the rear NFC reader for scanning");
-      nfcStatus.value = "> Scanning 1...";
-
-      ndef.addEventListener("readingerror", () => {
-        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
-      });
-
-      // Define el listener para el evento de lectura
-      const onNFCReading = ({ serialNumber }) => {
-        nfcStatus.value = "> NFC Tag scanned:" +  serialNumber;
-        if( ExhhibitorIsScanning.value === true) {
-          nfcSerialNumberExhibitor.value = serialNumber;
-          ExhhibitorIsScanning.value = false;
-        }
-        else if (props.step === 2){
-          nfcSerialNumberProfessional.value = serialNumber;
-          ExhhibitorIsScanning.value = true;
-        }
-        // nfcStatus.value = "> Scanning stopped";
-
-        // Elimina el listener después de la lectura exitosa
-        // ndef.removeEventListener("reading", onNFCReading);
-        // nfcLog0.value = "Removed NFC reading listener";
-      };
-
-      // Añade el listener al evento de lectura
-      ndef.addEventListener("reading", onNFCReading);
-    } catch (error) {
-      console.error("Error during NFC scan", error);
-      nfcLog3.value = `Argh! ${error}`;
-    }
-  }
-  ExhhibitorIsScanning.value = false;
-}
-*/
-
-/*
-const scanNFCStep2Click = async () => {
-  nfcLog0.value = "User Clicked Button";
-  scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
-
-  if (nfcSimulate.value) {
-    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
-    nfcStatus.value = "> Scanning 2...";
-  } else {
-    try {
-      const ndef = new NDEFReader();
-      await ndef.scan();
-      console.log("Swipe the wristband across the rear NFC reader for scanning");
-      nfcStatus.value = "> Scanning 2...";
-
-      ndef.addEventListener("readingerror", () => {
-        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
-      });
-
-      // Define el listener para el evento de lectura
-      const onNFCReading = ({ serialNumber }) => {
-        console.log("NFC Tag scanned: ", serialNumber);
-        nfcSerialNumberProfessional.value = serialNumber;
-        nfcStatus.value = "> Scanning stopped";
-
-        // Elimina el listener después de la lectura exitosa
-        ndef.removeEventListener("reading", onNFCReading);
-        nfcLog0.value = "Removed NFC reading listener";
-      };
-
-      // Añade el listener al evento de lectura
-      ndef.addEventListener("reading", onNFCReading);
-    } catch (error) {
-      console.error("Error during NFC scan", error);
-      nfcLog3.value = `Argh! ${error}`;
-    }
-  }
-}
-/*
-const scanNFCStep2Click = async () => {
-  console.log("SCAN NFC STEP 2 CLICKED");
-  // scanButton.addEventListener("click", async () => {
-  
-  scanText2.value = ref("Swipe the wristband across the rear NFC reader for scanning");
-  nfcLog0.value = "User Clicked Button";
-  if (nfcSimulate.value) {
-    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;  
-    nfcStatus.value = "> Scanning 2...";
-  } else {
-    try {
-      const ndef = new NDEFReader();
-      await ndef.scan();
-      nfcStatus.value = "> Scanning 2...";
-      ndef.addEventListener("readingerror", () => {
-        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
-      });
-      ndef.addEventListener("reading", ({ message, serialNumberPro }) => {
-        alert("NFC 2 SCANNED: " + serialNumberPro);
-        nfcSerialNumberProfessional.value = serialNumberPro;
-        // Detener el escaneo después de una lectura exitosa
-        ndef.stop().then(() => {
-          console.log("NFC scanning stopped");
-          nfcStatus.value = "> Scanning 2 stopped";
-        }).catch((error) => {
-          console.error("Error stopping NFC scan", error);
-        });
-      });
-    } catch (error) {
-      nfcLog3.value = "Argh! " + error;
-    }
-  }
-};
-*/
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   if (newVal !== "") {
-    alert("nfcSerialNumberExhibitor SERIAL NUMBER CHANGED");
+    // alert("nfcSerialNumberExhibitor SERIAL NUMBER CHANGED");
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
     fetchExhibitorfromNFC();
     emitChangeStep(2);
-    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   }
-  // console.warn ("NFCCCC " + ExhibitorIdfromTableNumber.value + " NFCCCC " + ExhibitorIdFromNFC.value);
-  // if(!isHot.value) {
-  //   if(ExhibitorIdfromTableNumber.value !== ExhibitorIdFromNFC.value) {
-  //     console.warn("NO COINCIDE EL NFC CON LA MESA");
-  //     nfcStatus.value = `NO COINCIDE NFC CON LA MESA`;
-  //   } 
-  //   else {
-  //     nfcStatus.value = `SI COINCIDE EL NFC CON LA MESA`
-  //     if (newVal !== "") {
-  //       nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-  //       fetchExhibitorfromNFC();
-  //       emitChangeStep(2);
-  //       // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
-  //     }
-  //   }
-  // }
-  // else {
-  //   if (newVal !== "") {
-  //     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-  //     fetchExhibitorfromNFC();
-  //     emitChangeStep(2);
-  //     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
-  //   }
 });
 
 watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
-  alert("nfcSerialNumberEnfcSerialNumberProfessionalhibitor SERIAL NUMBER CHANGED");
+  // alert("nfcSerialNumberEnfcSerialNumberProfessionalhibitor SERIAL NUMBER CHANGED");
   console.log("nfcSerialNumberProfessional changed");
   if (newVal !== "") {
     nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
@@ -672,7 +517,7 @@ const resetTablet = () => {
 <template>
   <!-- <button @click="scanNFCclicked"> Scan</button> -->
   <!-- <h3>Live Output</h3> -->
-  <div id="output" v-if="true" class="output">
+  <div id="output" v-if="false" class="output">
     <div id="content">{{ nfcContent }}</div>
     <div id="status">{{ nfcStatus }}</div>
     <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
