@@ -243,7 +243,7 @@ const postMeetingData = async () => {
   //   method: "GET"
   // });
 
-  alert("DATA: " + data);
+  // alert("DATA: " + data);
   console.log(data);
 };
 
