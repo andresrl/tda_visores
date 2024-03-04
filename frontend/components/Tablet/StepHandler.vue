@@ -60,8 +60,8 @@ const professionalEmail = ref("");
 const disclaimerAcceptance = ref("");
 const nfcContent = ref("");
 const nfcStatus = ref("");
-const nfcLog = ref("");
 const nfcLog0 = ref("");
+const nfcLog1 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
@@ -106,7 +106,7 @@ const fetchExhibitorbyId = async (id) => {
   console.log("tableName changed DATA", dataExhibitor.value);
 };
 
-const fetchExhibitor = async () => {
+const fetchExhibitorfromNFC = async () => {
   // https://andalusiancrushlink.com/api/bracelet/3034/true
   const { data } = await $fetch(
     `${API_ENDPOINT}/bracelet/${nfcSerialNumberExhibitor.value}`,
@@ -118,23 +118,26 @@ const fetchExhibitor = async () => {
   );
   dataExhibitor.value = data.user;
   ExhibitorIdFromNFC.value = dataExhibitor.value.id;
+  console.warn("ExhibitorIdFromNFC", ExhibitorIdFromNFC.value);
   ExhibitorTradeName.value = dataExhibitor.value.company_trade_name;
   ExhibitorLogoUrl.value = dataExhibitor.value.full_url_logo;
 };
 
-const fetchExhibitorByTableNumber = async () => {
-  // https://andalusiancrushlink.com/api/bracelet/3034/true
+const fetchExhibitorIdByTableNumber = async () => {
   const { data } = await $fetch(
-    `${API_ENDPOINT}/meeting-spaces/`,
+    `${API_ENDPOINT}/meeting-spaces`,
     {
       headers: {
         Authorization: BEARER_TOKEN,
       },
     }
   );
-    
   // Utiliza 'find' para buscar una coincidencia
-  return data.find(table => 't'+table.code == props.tableName);
+  let tableNameUpper = props.tableName.replace(/t/g, 'T')
+  tableNameUpper = tableNameUpper.replace(/h/g, 'H')
+
+  ExhibitorIdfromTableNumber.value = data.find(table => table.table_name == tableNameUpper);
+  ExhibitorIdfromTableNumber.value = 52
 };
 
 const fetchProfessional = async () => {
@@ -148,13 +151,13 @@ const fetchProfessional = async () => {
     }
   );
 
-  dataExhibitor.value = data;
+  dataProfessional.value = data;
 
-  professionalName.value = "NOMBREEEEE";
-  professionalName.value = dataExhibitor.value.user.name;
+  // professionalName.value = "NOMBREEEEE";
+  professionalName.value = dataProfessional.value.user.name;
   // console.log("NAMEEEE", professionalName.value);
-  professionalEmail.value = dataExhibitor.value.user.email;
-  professionalCompanyName.value = dataExhibitor.value.user.company_name;
+  professionalEmail.value = dataProfessional.value.user.email;
+  professionalCompanyName.value = dataProfessional.value.user.company_name;
 
   // console.log(dataExhibitor);
 };
@@ -329,14 +332,11 @@ onMounted(() => {
     console.log("tableName changed");
     fetchMeetingSpaces();
   }
-  if(!isHot.value) {
-    fetchExhibitorbyId(ExhibitorTradeId.value);
 
-    fetchExhibitorByTableNumber(props.tableName)
-      .then((table) => {
-        ExhibitorIdfromTableNumber.value = table.user_id;
-        fetchExhibitorbyId(table.user_id);
-      });
+  if(!isHot.value) {
+    // fetchExhibitorbyId(ExhibitorIdfromTableNumber.value);
+
+    // fetchExhibitorIdByTableNumber()
   }
 });
 
@@ -359,12 +359,12 @@ const scanNFCStep1Click = async () => {
   nfcLog0.value = "User Clicked Button";
   if (nfcSimulate.value) {
     nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
-    nfcLog2.value = "> Scanning...";
+    nfcStatus.value = "> Scanning...";
   } else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog2.value = "> Scanning...";
+      nfcStatus.value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
@@ -383,12 +383,12 @@ const scanNFCStep2Click = async () => {
   nfcLog0.value = "User Clicked Button";
   if (nfcSimulate.value) {
     nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
-    nfcLog3.value = "> Scanning...";
+    nfcStatus.value = "> Scanning...";
   } else {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      nfcLog3.value = "> Scanning...";
+      nfcStatus .value = "> Scanning...";
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
@@ -403,25 +403,41 @@ const scanNFCStep2Click = async () => {
 };
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
-  if(!isHot.value) {
-    if(ExhibitorIdfromTableNumber !== ExhibitorIdFromNFC) {}
-      fcLog2.value = `NO COINCIDE EL NFC CON LA MESA`;
-    } 
-    else {
-      `SI COINCIDE EL NFC CON LA MESA`
-    }
-  }
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
-    fetchExhibitor();
+    fetchExhibitorfromNFC();
     emitChangeStep(2);
-    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   }
-});
+  // console.warn ("NFCCCC " + ExhibitorIdfromTableNumber.value + " NFCCCC " + ExhibitorIdFromNFC.value);
+  // if(!isHot.value) {
+  //   if(ExhibitorIdfromTableNumber.value !== ExhibitorIdFromNFC.value) {
+  //     console.warn("NO COINCIDE EL NFC CON LA MESA");
+  //     nfcStatus.value = `NO COINCIDE NFC CON LA MESA`;
+  //   } 
+  //   else {
+  //     nfcStatus.value = `SI COINCIDE EL NFC CON LA MESA`
+  //     if (newVal !== "") {
+  //       nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
+  //       fetchExhibitorfromNFC();
+  //       emitChangeStep(2);
+  //       // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+  //     }
+  //   }
+  // }
+  // else {
+  //   if (newVal !== "") {
+  //     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
+  //     fetchExhibitorfromNFC();
+  //     emitChangeStep(2);
+  //     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+  //   }
+  });
 
 watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   console.log("nfcSerialNumberProfessional changed");
   if (newVal !== "") {
+    nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
     fetchProfessional();
     emitChangeStep(3);
@@ -458,7 +474,8 @@ const resetTablet = () => {
     <div id="content">{{ nfcContent }}</div>
     <div id="status">{{ nfcStatus }}</div>
     <pre id="log" style="color: #0000ff">{{ nfcLog0 }}</pre>
-    <pre id="log" style="color: #00ff00">{{ nfcLog }}</pre>
+    <pre id="log" style="color: #0000ff">{{ nfcLog1 }}</pre>
+    <pre id="log" style="color: #00ff00">{{ nfcLog2 }}</pre>
     <pre id="log" style="color: #ff0000">{{ nfcLog3 }}</pre>
   </div>
   <div>
@@ -643,24 +660,34 @@ const resetTablet = () => {
         <div class="frame">
           <h2>Disclaimer Acceptance</h2>
           <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-            eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-            fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+<p><strong><span style="font-size:22pt;">Privacy</span></strong></p>
+<p><strong><span style="font-size:11pt;">Privacy Policy and Data Protection Regulations</span></strong></p>
+<p><span>Through this portal, no personal data is collected from users without their consent.</span></p>
+<p><span>The personal data provided during your registration on the website, as well as any information provided through the use of the portal, will be treated confidentially for the sole and specific purpose of each processing. These data will be incorporated into the corresponding processing activities of the Public Company for the Management of Tourism and Sports in Andalusia, in accordance with Regulation (EU) 2016/679 of the European Parliament and of the Council on the protection of personal data (General Data Protection Regulation) and Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
+<p><span>Text fields identified as mandatory in the Registered User registration form must be completed by the interested parties. Failure to complete any of them could prevent the processing of your registration as a Registered User.</span></p>
+<p><span>In compliance with Article 32 of the GDPR regarding the security of processing, the website management company has implemented appropriate technical and organizational measures to ensure an adequate level of security that guarantees the security of data and prevents its alteration, loss, treatment, or unauthorized access. This is done considering the state of the art, nature, scope, context, and purposes of processing.</span></p>
+<p><span>The legitimacy of the processing is based on the consent of the users, in accordance with Article 6.1 a) of the GDPR.</span></p>
+<p><span>The personal data provided will be kept for the time necessary to fulfill the purpose for which they are collected, as specified in each processing activity.</span></p>
+<p><span>The collected data will only be subject to transfer, if applicable, with the prior consent of the interested party, and the recipients of the different processing activities can be consulted in the Registry of Processing Activities of the entity.</span></p>
+<p><span>The portal contains links to third-party websites with privacy policies unrelated to its own, for which it is not responsible. You will decide on the acceptance of those policies.</span></p>
+<p><span>Individuals whose personal data is processed by the entity can exercise the rights of access, rectification, erasure, objection, restriction of processing, and data portability, as well as object to automated individual decision-making, including profiling, as provided by current legislation. This can be done by contacting the data controller by sending a communication, including a copy of your ID, to the following email address: andalucia@andalucia.org, or to the address of the Public Company for the Management of Tourism and Sports in Andalusia at C/ Compa&ntilde;&iacute;a, 40 29008 M&aacute;laga (Spain).</span></p>
+<p><span>Users also have the right to file a complaint with the Spanish Data Protection Agency.</span></p>
+<p><span>By checking the corresponding box labeled &quot;I wish to receive the Newsletter,&quot; you authorize the Public Company for the Management of Tourism and Sports in Andalusia to send you information and promotional communications through any means, including electronic (email, etc.), regarding activities, initiatives, and/or services organized or sponsored by the Public Company for the Management of Tourism and Sports in Andalusia and/or the Ministry of Tourism, Trade, and Sports of the Andalusian Regional Government.</span></p>
+<p><span>In this regard, you can oppose the processing of your data for this purpose at any time, either when providing the data by checking the box included in the corresponding data collection forms or at any later time by sending an email to andalucia@andalucia.org or using specific means recognized in the commercial communications themselves.</span></p>
+<p><span>Similarly, by checking the acceptance box for the recommendation engine, you agree that recommendations will be shown during your navigation on the portal based on your interests to improve your browsing experience.</span></p>
+<p><span>Legal Notice</span></p>
+<p><span>Content Responsibility</span></p>
+<p><span>The Registered User undertakes to comply punctually with all the terms set out in the Terms of Use and not to use the website for illegal, fraudulent, or unauthorized purposes under the Terms of Use. In this regard, the Registered User will be responsible for the legal consequences arising from non-compliance with the terms set out in these Terms of Use.</span></p>
+<p><span>The Public Company for the Management of Tourism and Sports in Andalusia will only be responsible for damages that the Registered User may suffer from the use of the website when such damages are due to our intentional actions.</span></p>
+<p><span>The Public Company for the Management of Tourism and Sports in Andalusia is not responsible for the legality of other third-party websites from which access to the portal is possible.</span></p>
+<p><span>Modification of Terms of Use</span></p>
+<p><span>These Terms of Use are currently in effect. However, the Public Company for the Management of Tourism and Sports in Andalusia reserves the right to modify these Terms of Use at any time while respecting current regulations, without such modification having retroactive effect.</span></p>
+<p><span>Nullity of Clauses</span></p>
+<p><span>In the event that any of the provisions contained in these Terms of Use is declared null, it will be removed or replaced. In any case, such a declaration of nullity will not affect the validity of the other provisions contained in these Terms of Use.</span></p>
+<p><span>Applicable Legislation</span></p>
+<p><span>Law 34/2002, of July 11, on Services of the Information Society and Electronic Commerce (LSSI).</span></p>
+<p><span>Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016, regarding the protection of individuals concerning the processing of personal data and the free movement of such data and repealing Directive 95/46/EC (General Data Protection Regulation).</span></p>
+<p><span>Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights.</span></p>
           </div>
           <div class="cta">
             <div class="btn" @click="emitChangeStep(3)">Back</div>
