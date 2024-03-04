@@ -442,7 +442,7 @@ const scanNFCStep1Click = async () => {
 
       // Define el listener para el evento de lectura
       const onNFCReading = ({ serialNumber }) => {
-        console.log("NFC Tag scanned: ", serialNumber);
+        nfcStatus.value = "> NFC Tag scanned:" +  serialNumber;
         if( ExhhibitorIsScanning.value === true) {
           nfcSerialNumberExhibitor.value = serialNumber;
           ExhhibitorIsScanning.value = false;
