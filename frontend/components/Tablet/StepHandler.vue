@@ -441,8 +441,8 @@ const scanNFCStep1Click = async () => {
         nfcStatus.value = "> Scanning stopped";
 
         // Elimina el listener después de la lectura exitosa
-        // ndef.removeEventListener("reading", onNFCReading);
-        // console.log("Removed NFC reading listener");
+        ndef.removeEventListener("reading", onNFCReading);
+        nfcLog0.value = "Removed NFC reading listener";
       };
 
       // Añade el listener al evento de lectura
@@ -454,6 +454,45 @@ const scanNFCStep1Click = async () => {
   }
 }
 
+
+const scanNFscanNFCStep2ClickCStep1Click = async () => {
+  nfcLog0.value = "User Clicked Button";
+  scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
+
+  if (nfcSimulate.value) {
+    nfcSerialNumberProfessional.value = nfcSerialNumberProfessionalTest.value;
+    nfcStatus.value = "> Scanning 2...";
+  } else {
+    try {
+      const ndef = new NDEFReader();
+      await ndef.scan();
+      console.log("Swipe the wristband across the rear NFC reader for scanning");
+      nfcStatus.value = "> Scanning 2...";
+
+      ndef.addEventListener("readingerror", () => {
+        nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
+      });
+
+      // Define el listener para el evento de lectura
+      const onNFCReading = ({ serialNumber }) => {
+        console.log("NFC Tag scanned: ", serialNumber);
+        nfcSerialNumberProfessional.value = serialNumber;
+        nfcStatus.value = "> Scanning stopped";
+
+        // Elimina el listener después de la lectura exitosa
+        ndef.removeEventListener("reading", onNFCReading);
+        nfcLog0.value = "Removed NFC reading listener";
+      };
+
+      // Añade el listener al evento de lectura
+      ndef.addEventListener("reading", onNFCReading);
+    } catch (error) {
+      console.error("Error during NFC scan", error);
+      nfcLog3.value = `Argh! ${error}`;
+    }
+  }
+}
+/*
 const scanNFCStep2Click = async () => {
   console.log("SCAN NFC STEP 2 CLICKED");
   // scanButton.addEventListener("click", async () => {
@@ -487,6 +526,7 @@ const scanNFCStep2Click = async () => {
     }
   }
 };
+*/
 
 watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   if (newVal !== "") {
