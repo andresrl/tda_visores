@@ -24,6 +24,11 @@ const MeetingSpaceId = ref("");
 const ExhibitorTradeName = ref("");
 const ExhibitorLogoUrl = ref("");
 
+const exhibitorCompanyName = ref("")
+const exhibitorTradeName = ref("")
+const exhibitorName = ref("")
+const exhibitorEmail = ref("")
+
 const professionalCompanyType = ref("default");
 const professionalName = ref("");
 const professionalCompanyName = ref("");
@@ -38,7 +43,7 @@ const nfcLog3 = ref("");
 const scanText1 = ref('');
 const scanText2 = ref('');
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -125,6 +130,12 @@ const fetchExhibitorfromNFC = async () => {
       },
     }
   );
+
+  exhibitorCompanyName.value = data.user.company_name
+  exhibitorTradeName.value =data.user.company_trade_name
+  exhibitorName.value = data.user.name + ' ' + data.user.surname
+  exhibitorEmail.value = data.user.email
+
   dataExhibitor.value = data.user;
   ExhibitorIdFromNFC.value = dataExhibitor.value.id;
   console.warn("ExhibitorIdFromNFC", ExhibitorIdFromNFC.value);
@@ -172,7 +183,7 @@ const fetchProfessional = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
-  console.log("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
+  alert("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
   const body = {
             // meeting_space_id: MeetingSpaceId.value,
             meeting_space_id: 43,
@@ -206,13 +217,13 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
+  // alert(dataExhibitor.value.company_trade_name)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
-    company_name: dataExhibitor.value.company_name,
-    company_tradename: dataExhibitor.value.company_trade_name,
-    company_username:
-      dataExhibitor.value.name + " - " + dataExhibitor.value.surname,
-    company_email: dataExhibitor.value.email,
+    company_name: exhibitorCompanyName.value,
+    company_tradename: exhibitorTradeName.value,
+    company_username: exhibitorName.value,
+    company_email: exhibitorEmail.value,
     professional_fullname: professionalName.value,
     professional_company: professionalCompanyName.value,
     professional_email: professionalEmail.value,
@@ -224,9 +235,6 @@ const postMeetingData = async () => {
     method: "POST",
     body: JSON.stringify(body),
   });
-
-
-
 
   // const params = new URLSearchParams({
   //   company_name: body.company_name,
@@ -417,12 +425,19 @@ const scanNFCStep1Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        // nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumberExhibitor.value = serialNumber;
+        // Detener el escaneo después de una lectura exitosa
+        ndef.stop().then(() => {
+          console.log("NFC scanning stopped");
+          nfcStatus.value = "> Scanning stopped";
+        }).catch((error) => {
+          console.error("Error stopping NFC scan", error);
+        });
       });
     } catch (error) {
       nfcLog3.value = "Argh! " + error;
     }
+    ndef.stop()
   }
 };
 const scanNFCStep2Click = async () => {
@@ -443,8 +458,15 @@ const scanNFCStep2Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        // nfcLog2.value = `> Serial Number: ${serialNumber}`
+        alert("NFC SCANNED", serialNumber);
         nfcSerialNumberProfessional.value = serialNumber;
+        // Detener el escaneo después de una lectura exitosa
+        ndef.stop().then(() => {
+          console.log("NFC scanning stopped");
+          nfcStatus.value = "> Scanning stopped";
+        }).catch((error) => {
+          console.error("Error stopping NFC scan", error);
+        });
       });
     } catch (error) {
       nfcLog3.value = "Argh! " + error;
@@ -516,6 +538,10 @@ const resetTablet = () => {
   scanText2.value = "";
   dataExhibitor.value = {};
   dataProfessional.value = {};
+  exhibitorCompanyName.value = ""
+  exhibitorTradeName.value = ""
+  exhibitorName.value = ""
+  exhibitorEmail.value = ""
 };
 </script>
 
