@@ -206,6 +206,7 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
+  alert(dataExhibitor.value.company_trade_name)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
     company_name: dataExhibitor.value.company_name,
@@ -224,9 +225,6 @@ const postMeetingData = async () => {
     method: "POST",
     body: JSON.stringify(body),
   });
-
-
-
 
   // const params = new URLSearchParams({
   //   company_name: body.company_name,
@@ -417,12 +415,19 @@ const scanNFCStep1Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        // nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumberExhibitor.value = serialNumber;
+        // Detener el escaneo después de una lectura exitosa
+        ndef.stop().then(() => {
+          console.log("NFC scanning stopped");
+          nfcStatus.value = "> Scanning stopped";
+        }).catch((error) => {
+          console.error("Error stopping NFC scan", error);
+        });
       });
     } catch (error) {
       nfcLog3.value = "Argh! " + error;
     }
+    ndef.stop()
   }
 };
 const scanNFCStep2Click = async () => {
@@ -443,8 +448,14 @@ const scanNFCStep2Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        // nfcLog2.value = `> Serial Number: ${serialNumber}`
         nfcSerialNumberProfessional.value = serialNumber;
+        // Detener el escaneo después de una lectura exitosa
+        ndef.stop().then(() => {
+          console.log("NFC scanning stopped");
+          nfcStatus.value = "> Scanning stopped";
+        }).catch((error) => {
+          console.error("Error stopping NFC scan", error);
+        });
       });
     } catch (error) {
       nfcLog3.value = "Argh! " + error;
