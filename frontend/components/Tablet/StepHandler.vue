@@ -602,7 +602,7 @@ const resetTablet = () => {
                   @click="scanNFCClick"
                   style="color: #fff; cursor: pointer">
 
-                  Press to Scan Bracelet
+                  Scan Bracelet
                 </div>
               </div>
               <div id="log" style="color: #ffffff; text-align: left">{{ scanText2 }}</div>
