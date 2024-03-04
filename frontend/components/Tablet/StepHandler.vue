@@ -160,7 +160,7 @@ const fetchExhibitorIdByTableNumber = async () => {
   ExhibitorIdfromTableNumber.value = 52
 };
 
-const fetchProfessional = async () => {
+const fetchProfessionalfromNFC = async () => {
   // https://andalusiancrushlink.com/api/bracelet/3034/true
   const { data } = await $fetch(
     `${API_ENDPOINT}/bracelet/${nfcSerialNumberProfessional.value}`,
@@ -183,7 +183,7 @@ const fetchProfessional = async () => {
 };
 
 const postMeetingSlotBlock = async () => {
-  alert("ExhibitorIdFromNFC:::::", ExhibitorIdFromNFC.value);
+  alert("ExhibitorIdFromNFC::::: " + ExhibitorIdFromNFC.value);
   const body = {
             // meeting_space_id: MeetingSpaceId.value,
             meeting_space_id: 43,
@@ -217,7 +217,7 @@ const postMeetingSlotBlock = async () => {
 };
 
 const postMeetingData = async () => {
-  // alert(dataExhibitor.value.company_trade_name)
+  alert(exhibitorCompanyName.value)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
     company_name: exhibitorCompanyName.value,
@@ -425,6 +425,7 @@ const scanNFCStep1Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        alert("NFC 1 SCANNED: " + serialNumber);
         nfcSerialNumberExhibitor.value = serialNumber;
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
@@ -457,9 +458,9 @@ const scanNFCStep2Click = async () => {
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
-      ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        alert("NFC SCANNED", serialNumber);
-        nfcSerialNumberProfessional.value = serialNumber;
+      ndef.addEventListener("reading", ({ message, serialNumberPro }) => {
+        alert("NFC 2 SCANNED: " + serialNumberPro);
+        nfcSerialNumberProfessional.value = serialNumberPro;
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
           console.log("NFC scanning stopped");
@@ -511,7 +512,7 @@ watch(nfcSerialNumberProfessional, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
     nfcSerialNumberProfessional.value = newVal.replace(/:/g, "");
-    fetchProfessional();
+    fetchProfessionalfromNFC();
     emitChangeStep(3);
     // nfcLog2.value = `> Serial Number: ${nfcSerialNumberProfessional.value}`;
   }
