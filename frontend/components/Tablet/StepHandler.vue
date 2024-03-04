@@ -146,6 +146,10 @@ const fetchExhibitorfromNFC = async () => {
   console.warn("ExhibitorIdFromNFC", ExhibitorIdFromNFC.value);
   ExhibitorTradeName.value = dataExhibitor.value.company_trade_name;
   ExhibitorLogoUrl.value = dataExhibitor.value.full_url_logo;
+
+  emitChangeStep(2);
+  nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+
 };
 
 const fetchExhibitorIdByTableNumber = async () => {
@@ -430,7 +434,7 @@ const scanNFCStep1Click = async () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        alert("NFC 1 SCANNED: " + serialNumber);
+        // alert("NFC 1 SCANNED: " + serialNumber);
         nfcSerialNumberExhibitor.value = serialNumber;
         // Detener el escaneo después de una lectura exitosa
         ndef.stop().then(() => {
@@ -484,8 +488,8 @@ watch(nfcSerialNumberExhibitor, (newVal, oldVal) => {
   if (newVal !== "") {
     nfcSerialNumberExhibitor.value = newVal.replace(/:/g, "");
     fetchExhibitorfromNFC();
-    emitChangeStep(2);
-    nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
+    // emitChangeStep(2);
+    // nfcLog2.value = `> Serial Number: ${nfcSerialNumberExhibitor.value}`;
   }
   // console.warn ("NFCCCC " + ExhibitorIdfromTableNumber.value + " NFCCCC " + ExhibitorIdFromNFC.value);
   // if(!isHot.value) {
