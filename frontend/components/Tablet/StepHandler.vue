@@ -417,10 +417,9 @@ if (process.client) {
 }
 
 const scanNFCStep1Click = async () => {
-  // scanButton.addEventListener("click", async () => {
   nfcLog0.value = "User Clicked Button";
-  // alert("SCAN NFC STEP 1 CLICKED");
-  scanText1.value = ref("Swipe the wristband across the rear NFC reader for scanning");
+  scanText1.value = "Swipe the wristband across the rear NFC reader for scanning";
+
   if (nfcSimulate.value) {
     nfcSerialNumberExhibitor.value = nfcSerialNumberExhibitorTest.value;
     nfcStatus.value = "> Scanning...";
@@ -430,27 +429,31 @@ const scanNFCStep1Click = async () => {
       await ndef.scan();
       console.log("Swipe the wristband across the rear NFC reader for scanning");
       nfcStatus.value = "> Scanning...";
+
       ndef.addEventListener("readingerror", () => {
         nfcLog2.value = "Argh! Cannot read data from the NFC tag. Try another one?";
       });
-      ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        // alert("NFC 1 SCANNED: " + serialNumber);
+
+      // Define el listener para el evento de lectura
+      const onNFCReading = ({ serialNumber }) => {
+        console.log("NFC Tag scanned: ", serialNumber);
         nfcSerialNumberExhibitor.value = serialNumber;
-        // Detener el escaneo después de una lectura exitosa
-        ndef.stop().then(() => {
-          console.log("NFC scanning stopped");
-          alert("> Scanning stopped");
-          nfcStatus.value = "> Scanning 1 stopped";
-        }).catch((error) => {
-          console.error("Error stopping NFC scan", error);
-        });
-      });
+        nfcStatus.value = "> Scanning stopped";
+
+        // Elimina el listener después de la lectura exitosa
+        ndef.removeEventListener("reading", onNFCReading);
+        console.log("Removed NFC reading listener");
+      };
+
+      // Añade el listener al evento de lectura
+      ndef.addEventListener("reading", onNFCReading);
     } catch (error) {
-      nfcLog3.value = "Argh! " + error;
+      console.error("Error during NFC scan", error);
+      nfcLog3.value = `Argh! ${error}`;
     }
-    ndef.stop()
   }
-};
+}
+
 const scanNFCStep2Click = async () => {
   console.log("SCAN NFC STEP 2 CLICKED");
   // scanButton.addEventListener("click", async () => {
