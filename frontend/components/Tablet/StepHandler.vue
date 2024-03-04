@@ -444,7 +444,7 @@ const scanNFCStep1Click = async () => {
 const scanNFCStep2Click = async () => {
   console.log("SCAN NFC STEP 2 CLICKED");
   // scanButton.addEventListener("click", async () => {
-    
+  
   scanText2.value = ref("Swipe the wristband across the rear NFC reader for scanning");
   nfcLog0.value = "User Clicked Button";
   if (nfcSimulate.value) {
