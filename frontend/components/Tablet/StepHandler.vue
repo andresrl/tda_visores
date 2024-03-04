@@ -62,7 +62,7 @@ const nfcLog0 = ref("");
 const nfcLog2 = ref("");
 const nfcLog3 = ref("");
 
-const nfcSimulate = ref(true);
+const nfcSimulate = ref(false);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
