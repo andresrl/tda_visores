@@ -24,6 +24,11 @@ const MeetingSpaceId = ref("");
 const ExhibitorTradeName = ref("");
 const ExhibitorLogoUrl = ref("");
 
+const exhibitorCompanyName = ref("")
+const exhibitorTradeName = ref("")
+const exhibitorName = ref("")
+const exhibitorEmail = ref("")
+
 const professionalCompanyType = ref("default");
 const professionalName = ref("");
 const professionalCompanyName = ref("");
@@ -38,7 +43,7 @@ const nfcLog3 = ref("");
 const scanText1 = ref('');
 const scanText2 = ref('');
 
-const nfcSimulate = ref(false);
+const nfcSimulate = ref(true);
 const nfcSerialNumberExhibitor = ref("");
 const nfcSerialNumberProfessional = ref("");
 // const nfcSerialNumberDecimalExhibitor = ref("3034");
@@ -125,6 +130,12 @@ const fetchExhibitorfromNFC = async () => {
       },
     }
   );
+
+  exhibitorCompanyName.value = data.user.company_name
+  exhibitorTradeName.value =data.user.company_trade_name
+  exhibitorName.value = data.user.name + ' ' + data.user.surname
+  exhibitorEmail.value = data.user.email
+
   dataExhibitor.value = data.user;
   ExhibitorIdFromNFC.value = dataExhibitor.value.id;
   console.warn("ExhibitorIdFromNFC", ExhibitorIdFromNFC.value);
@@ -209,11 +220,10 @@ const postMeetingData = async () => {
   alert(dataExhibitor.value.company_trade_name)
   console.log("dataExhibitor.value", dataExhibitor.value)
   const body = {
-    company_name: dataExhibitor.value.company_name,
-    company_tradename: dataExhibitor.value.company_trade_name,
-    company_username:
-      dataExhibitor.value.name + " - " + dataExhibitor.value.surname,
-    company_email: dataExhibitor.value.email,
+    company_name: exhibitorCompanyName.value,
+    company_tradename: exhibitorTradeName.value,
+    company_username: exhibitorName.value,
+    company_email: exhibitorEmail.value,
     professional_fullname: professionalName.value,
     professional_company: professionalCompanyName.value,
     professional_email: professionalEmail.value,
