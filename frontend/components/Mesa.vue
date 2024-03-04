@@ -15,11 +15,11 @@ const estaSeleccionada = computed(() => {
 const empresa = computed(() => {
   const space = spaces.value.find((space) => space.table_name === props.mesa);
 
-  if (space?.user_id) {
-    return organizers.value.find(
-      (organizer) => organizer.id === space?.user_id,
-    );
-  }
+  // if (space?.user_id) {
+  //   return organizers.value.find(
+  //     (organizer) => organizer.id === space?.user_id,
+  //   );
+  // }
 
   return slots.value.find((slot) => slot.meeting_space_id === space?.id)
     ?.organizer;
