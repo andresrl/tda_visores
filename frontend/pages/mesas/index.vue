@@ -171,6 +171,25 @@ onBeforeUnmount(() => {
             <Mesa :mesa="'H6'" />
             <Mesa :mesa="'H8'" />
           </div>
+
+          <div
+            style="
+              margin: auto 0;
+              display: flex;
+              flex-direction: column;
+              gap: 1em;
+            "
+          >
+            <div class="info-table-block">
+              <div></div>
+              FREE TABLE
+            </div>
+
+            <div class="info-table-block">
+              <div style="background: black"></div>
+              MEETING IN COURSE
+            </div>
+          </div>
         </div>
         <div class="flex flex-column gap ms-auto">
           <div class="flex gap">
@@ -232,5 +251,18 @@ h2 {
 
 .gap-big {
   gap: 4em;
+}
+
+.info-table-block {
+  color: $verde;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  > div {
+    width: 80px;
+    height: 80px;
+    border: 0.1em solid $verde;
+    background: $verde;
+  }
 }
 </style>

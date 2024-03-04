@@ -52,7 +52,7 @@ $verde: #00ce7e;
   font-family: Barlow-Black;
   font-size: 1.2em;
   line-height: 1em;
-  border: 0.3em solid $verde;
+  border: 0.1em solid $verde;
 
   > div {
     width: 80%;
