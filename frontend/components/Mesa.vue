@@ -15,14 +15,20 @@ const estaSeleccionada = computed(() => {
 const empresa = computed(() => {
   const space = spaces.value.find((space) => space.table_name === props.mesa);
 
-  // if (space?.user_id) {
-  //   return organizers.value.find(
-  //     (organizer) => organizer.id === space?.user_id,
-  //   );
-  // }
+  if (space?.user_id) {
+    return organizers.value.find(
+      (organizer) => organizer.id === space?.user_id,
+    );
+  }
 
   return slots.value.find((slot) => slot.meeting_space_id === space?.id)
     ?.organizer;
+});
+
+const estaOcupada = computed(() => {
+  const space = spaces.value.find((space) => space.table_name === props.mesa);
+
+  return slots.value.some((slot) => slot.meeting_space_id === space?.id);
 });
 </script>
 
@@ -33,12 +39,12 @@ const empresa = computed(() => {
     type="button"
     @click="$emit('seleccionada')"
     :class="{
-      libre: !empresa,
-      ocupada: !!empresa,
+      libre: !estaOcupada,
+      ocupada: estaOcupada,
       seleccionada: estaSeleccionada,
     }"
   >
-    <div>{{ empresa?.company_trade_name ?? "Libre" }}</div>
+    <span>{{ empresa?.company_trade_name ?? "Libre" }}</span>
   </button>
 </template>
 
