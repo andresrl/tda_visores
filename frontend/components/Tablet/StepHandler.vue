@@ -451,7 +451,7 @@ const scanNFCStep1Click = async () => {
           nfcSerialNumberProfessional.value = serialNumber;
           ExhhibitorIsScanning.value = true;
         }
-        nfcStatus.value = "> Scanning stopped";
+        // nfcStatus.value = "> Scanning stopped";
 
         // Elimina el listener después de la lectura exitosa
         // ndef.removeEventListener("reading", onNFCReading);

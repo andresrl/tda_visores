@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeUnmount } from "vue";
+import { isBefore, isAfter } from "date-fns";
 
 const FETCH_INTERVAL = 30_000;
 
@@ -49,13 +50,19 @@ const fetchMeetingSlots = async () => {
   // const now = new Date("2024-03-05T09:12:00.000000Z");
   const now = new Date();
 
+
   slots.value = data
     .filter((item) => item.organizer_id)
     .filter((item) => {
       const startsAt = new Date(item.starts_at);
       const endsAt = new Date(item.ends_at);
+      
+      // Agregar una hora a startsAt
+      // startsAt.setHours(startsAt.getHours() + 1);
+      // // Agregar una hora a endsAt
+      // endsAt.setHours(endsAt.getHours() + 1);
 
-      return now >= startsAt && now <= endsAt;
+      return isBefore(now, endsAt) && isAfter(now, startsAt);
     })
     .map((slot) => {
       const organizer = organizers.value.find(
