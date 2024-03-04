@@ -30,9 +30,9 @@ const fetchDataEmociones = async () => {
     runtimeConfig.public.NODE_SERVER_URL + "/api/get-goli-data",
   );
 
-  const updatedFichas = result
+  fichas.value = result
     .filter((ficha) => ficha.Anhelo)
-    .map((ficha, index) => {
+    .map((ficha) => {
       return {
         nombre: ficha.__EMPTY.toLowerCase().trim(),
         admiration: ficha["Admiración "],
@@ -46,27 +46,6 @@ const fetchDataEmociones = async () => {
         reacciones: ficha["TOTAL REACCIONES"],
       };
     });
-
-  // Si se añaden o eliminan, sobrescribimos array entero
-  if (updatedFichas.length !== fichas.value.length) {
-    return (fichas.value = updatedFichas);
-  }
-
-  updatedFichas.forEach((updatedFicha, index) => {
-    if (index < fichas.value.length) {
-      fichas.value[index].optimism = updatedFicha.optimism;
-      fichas.value[index].reacciones = updatedFicha.reacciones;
-      fichas.value[index].tenderness = updatedFicha.tenderness;
-      fichas.value[index].admiration = updatedFicha.admiration;
-      fichas.value[index].devotion = updatedFicha.devotion;
-      fichas.value[index].enthusiasm = updatedFicha.enthusiasm;
-      fichas.value[index].fervency = updatedFicha.fervency;
-      fichas.value[index].longing = updatedFicha.longing;
-      fichas.value[index].surprise = updatedFicha.surprise;
-    } else {
-      fichas.value.push(updatedFicha);
-    }
-  });
 };
 
 const fetchDataTiempoReal = async () => {
@@ -86,15 +65,8 @@ const fetchDataTiempoReal = async () => {
   // );
 
   tiempoReal.value = {
-    edad: goli2.edad,
-    visitantes: goli2.visitantes,
-    "emocion predominante": goli2["emocion predominante"],
-    hombres: goli2.hombres,
-    mujeres: goli2.mujeres,
-
-    companies: api2.companies,
-    professionals: api2.professionals,
-    meetings: api2.meetings,
+    ...goli2,
+    ...api2,
   };
 };
 
@@ -109,22 +81,7 @@ const fetchDataPosts = async () => {
     },
   });
 
-  const updatedPosts = data.filter((c) => !!c.featured_offer);
-
-  if (posts.value.length > updatedPosts.length) {
-    posts.value.splice(
-      posts.value.length,
-      posts.value.length - updatedPosts.length,
-    );
-  }
-
-  updatedPosts.forEach((updatedPost, index) => {
-    if (index < posts.value.length) {
-      posts.value[index] = updatedPost;
-    } else {
-      posts.value.push(updatedPost);
-    }
-  });
+  posts.value = data.filter((c) => !!c.featured_offer);
 };
 
 const onSwiper = (swiper) => {
