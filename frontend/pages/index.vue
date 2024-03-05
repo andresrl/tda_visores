@@ -4,9 +4,13 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 
+const BEARER_TOKEN =
+    "Bearer 5|ne4srosIMQWM3lTyAZfIH28RONnIvinPDOhu7qdWb65ac5d3";
+  const API_ENDPOINT = "https://andalusiancrushlink.com/api";
+
 const DELAY_SLIDER_EMOCIONES = 10 * 1000;
 const DELAY_SLIDER_TIEMPO_REAL = 7 * 1000;
-const DELAY_SLIDER_POSTS = 7 * 1000;
+const DELAY_SLIDER_POSTS = 10 * 1000;
 
 const REFRESH_DATA_INTERVAL = 30 * 1000;
 
@@ -54,10 +58,23 @@ const fetchDataTiempoReal = async () => {
   )[0];
 
   // TODO
-  const api2 = {
+  var api2 = {
     companies: 2371,
     professionals: 346,
     meetings: 122,
+  };
+
+  const api2fetch = await $fetch(`${API_ENDPOINT}/stats`, {
+    headers: {
+      Authorization: BEARER_TOKEN,
+    },
+  });
+
+
+  api2 = {
+    companies: api2fetch.data['professional-and'],
+    professional: api2fetch.data.professional,
+    meetings: api2fetch.data.blocked_slots,
   };
 
   // const goli2 = await $fetch(

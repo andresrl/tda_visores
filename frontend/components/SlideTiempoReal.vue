@@ -40,7 +40,7 @@ const isAnimated = computed(() => {
             class="info-izquierda"
             :class="{ 'animate__animated animate__slideInUp': isAnimated }"
           >
-            <div class="numero">{{ tiempoReal.professionals }}</div>
+            <div class="numero">{{ tiempoReal.professional }}</div>
             <div class="texto">Professionals</div>
           </div>
           <div
