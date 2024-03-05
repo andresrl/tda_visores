@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
           <div class="flex gap justify-content-center">
             <Mesa :mesa="'T30'" @seleccionada="mesaSeleccionada = 'T30'" />
             <Mesa :mesa="'T31'" @seleccionada="mesaSeleccionada = 'T31'" />
-            <Mesa :mesa="'H TEST1000'" @seleccionada="mesaSeleccionada = 'H TEST1000'" />
+            <!-- <Mesa :mesa="'H TEST1000'" @seleccionada="mesaSeleccionada = 'H TEST1000'" /> -->
           </div>
           <BloqueEmpresaSeleccionada />
         </div>
