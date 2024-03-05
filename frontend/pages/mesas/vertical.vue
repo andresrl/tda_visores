@@ -52,7 +52,7 @@ const fetchMeetingSlots = async () => {
 
 
   slots.value = data
-    .filter((item) => item.organizer_id)
+      .filter((item) => item.organizer_id || item.requester_id)
     .filter((item) => {
       const startsAt = new Date(item.starts_at);
       const endsAt = new Date(item.ends_at);
@@ -66,7 +66,7 @@ const fetchMeetingSlots = async () => {
     })
     .map((slot) => {
       const organizer = organizers.value.find(
-        (organizer) => organizer.id === slot.organizer_id,
+        (organizer) => organizer.id === slot.organizer_id || organizer.id === slot.requester_id,
       );
 
       const meetingSpace = spaces.value.find(

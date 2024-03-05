@@ -21,7 +21,7 @@ const empresa = computed(() => {
 
   const slot = slots.value.find((slot) => slot.meeting_space_id === space?.id);
   return organizers.value.find(
-    (organizer) => organizer.id === slot?.organizer_id,
+    (organizer) => organizer.id === slot?.organizer_id  || organizer.id === slot?.requester_id,
   );
 });
 </script>
