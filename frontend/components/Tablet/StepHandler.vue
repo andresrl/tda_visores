@@ -280,15 +280,15 @@ function emitChangeStep(step) {
 /////////////////////////////////
 const startMeeting = () => {
   if (professionalName.value === "") {
-    alert("Please enter your name");
+    // alert("Please enter your name");
     return;
   }
   if (professionalCompanyName.value === "") {
-    alert("Please enter your company name");
+    // alert("Please enter your company name");
     return;
   }
   if (professionalEmail.value === "") {
-    alert("Please enter your email");
+    // alert("Please enter your email");
     return;
   }
   if (professionalCompanyType.value === "default") {
@@ -296,7 +296,7 @@ const startMeeting = () => {
     return;
   }
   if (!disclaimerAcceptance.value) {
-    alert("Please accept the disclaimer");
+    // alert("Please accept the disclaimer");
     return;
   }
   // if(!isHot.value && (ExhibitorIdFromNFC.value !== ExhibitorIdfromTableNumber.value)) {
