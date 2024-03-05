@@ -194,8 +194,8 @@ const fetchProfessionalfromNFC = async () => {
 const postMeetingSlotBlock = async () => {
   // alert("ExhibitorIdFromNFC::::: " + ExhibitorIdFromNFC.value);
   const body = {
-            // meeting_space_id: MeetingSpaceId.value,
-            meeting_space_id: 43,
+            meeting_space_id: MeetingSpaceId.value,
+            // meeting_space_id: 43,
     user_id: ExhibitorIdFromNFC.value,
   };
 
