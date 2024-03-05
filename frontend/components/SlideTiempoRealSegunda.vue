@@ -10,11 +10,11 @@ const isAnimated = computed(() => {
 });
 
 const emocionPredominanteNumero = computed(() => {
-  return props.tiempoReal["emocion predominante"]?.split("_")?.[1];
+  return props.tiempoReal["Emocion predominante"]?.split("_")?.[1];
 });
 
 const emocionPredominanteTexto = computed(() => {
-  return props.tiempoReal["emocion predominante"]
+  return props.tiempoReal["Emocion predominante"]
     ?.split("_")?.[0]
     ?.toUpperCase();
 });
